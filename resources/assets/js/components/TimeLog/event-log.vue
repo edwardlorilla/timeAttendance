@@ -1,18 +1,22 @@
 <template>
-    <div>
-        <el-date-picker
-                v-model="dateFilter"
-                type="daterange"
-                placeholder="Pick a range">
-        </el-date-picker>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span style="line-height: 50%;"><el-date-picker
+                    v-model="dateFilter"
+                    type="daterange"
+                    placeholder="Pick a range">
+        </el-date-picker></span>
+            <!--<el-button style="float: right;" type="primary">Operation button</el-button>-->
+        </div>
+
+
         <data-tables :data="filteredData" :actions-def="actionsDef" :checkbox-filter-def="checkFilterDef"
                      :action-col-def="actionColDef">
             <el-table-column v-for="(title, index) in titles" :prop="title.prop" :label="title.label" :key="index"
                              sortable="custom">
             </el-table-column>
         </data-tables>
-        <button @click="testDate"></button>
-    </div>
+    </el-card>
 
 </template>
 
@@ -113,18 +117,18 @@
         computed: {
             filteredData(){
                 var vm = this
-                var startDate = new Date(vm.$moment(vm.dateFilter[0]).format('YYYY-MM-DD'));
-                var endDate = new Date(vm.$moment(vm.dateFilter[1]).format('YYYY-MM-DD'));
+                var startDateFilter = vm.dateFilter[0];
+                var startDate = new Date(vm.$moment(startDateFilter).format('YYYY-MM-DD'));
+                var endDateFilter = vm.dateFilter[1];
+                var endDate = new Date(vm.$moment(endDateFilter).format('YYYY-MM-DD'));
                     return  _.filter(vm.data.all, (function(product) {
-                        if(_.isEmpty(vm.dateFilter) || (_.isNull(vm.dateFilter[0]) && _.isNull(vm.dateFilter[1])) ){
+                        if(_.isEmpty(vm.dateFilter) || (_.isNull(startDateFilter) && _.isNull(endDateFilter)) ){
                             return true
                         }else{
                             var date = new Date(vm.$moment(product.LocalDate).format('YYYY-MM-DD'));
                             return (date >= startDate && date <= endDate);
                         }
                     }))
-
-
             }
 
         },

@@ -101569,6 +101569,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -101663,10 +101667,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         filteredData: function filteredData() {
             var vm = this;
-            var startDate = new Date(vm.$moment(vm.dateFilter[0]).format('YYYY-MM-DD'));
-            var endDate = new Date(vm.$moment(vm.dateFilter[1]).format('YYYY-MM-DD'));
+            var startDateFilter = vm.dateFilter[0];
+            var startDate = new Date(vm.$moment(startDateFilter).format('YYYY-MM-DD'));
+            var endDateFilter = vm.dateFilter[1];
+            var endDate = new Date(vm.$moment(endDateFilter).format('YYYY-MM-DD'));
             return _.filter(vm.data.all, function (product) {
-                if (_.isEmpty(vm.dateFilter) || _.isNull(vm.dateFilter[0]) && _.isNull(vm.dateFilter[1])) {
+                if (_.isEmpty(vm.dateFilter) || _.isNull(startDateFilter) && _.isNull(endDateFilter)) {
                     return true;
                 } else {
                     var date = new Date(vm.$moment(product.LocalDate).format('YYYY-MM-DD'));
@@ -101701,7 +101707,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('el-date-picker', {
+  return _c('el-card', {
+    staticClass: "box-card"
+  }, [_c('div', {
+    staticClass: "clearfix",
+    slot: "header"
+  }, [_c('span', {
+    staticStyle: {
+      "line-height": "50%"
+    }
+  }, [_c('el-date-picker', {
     attrs: {
       "type": "daterange",
       "placeholder": "Pick a range"
@@ -101713,7 +101728,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "dateFilter"
     }
-  }), _vm._v(" "), _c('data-tables', {
+  })], 1)]), _vm._v(" "), _c('data-tables', {
     attrs: {
       "data": _vm.filteredData,
       "actions-def": _vm.actionsDef,
@@ -101729,11 +101744,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "sortable": "custom"
       }
     })
-  })), _vm._v(" "), _c('button', {
-    on: {
-      "click": _vm.testDate
-    }
-  })], 1)
+  }))], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
