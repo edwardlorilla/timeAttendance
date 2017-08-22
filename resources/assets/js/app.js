@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -8,6 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+
 import VueRouter from 'vue-router';
 import routes from './routes.js';
 import App from './components/App.vue';
@@ -18,7 +18,12 @@ import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 import components from './components'
 import VueTimeago from 'vue-timeago'
-
+import moment from 'moment'
+Object.defineProperty(Vue.prototype, '$moment', {
+    get(){
+        return this.$root.moment
+    }
+})
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -47,6 +52,9 @@ const router = new VueRouter({
 
 const app = new Vue({
     el: '#app',
+    data: {
+        moment
+    },
     router,
     render: r => r(App)
 });

@@ -1,14 +1,14 @@
 webpackJsonp([3],{
 
-/***/ 120:
+/***/ 134:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(32)(
+var Component = __webpack_require__(9)(
   /* script */
-  __webpack_require__(124),
+  __webpack_require__(149),
   /* template */
-  __webpack_require__(125),
+  __webpack_require__(150),
   /* styles */
   null,
   /* scopeId */
@@ -16,9 +16,9 @@ var Component = __webpack_require__(32)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\xampp\\htdocs\\timeAttendance\\resources\\assets\\js\\components\\Auth\\_Login.vue"
+Component.options.__file = "C:\\xampp\\htdocs\\timeAttendance\\resources\\assets\\js\\components\\TimeLog\\event-log.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] _Login.vue: functional components are not supported with templates, they should use render functions.")}
+if (Component.options.functional) {console.error("[vue-loader] event-log.vue: functional components are not supported with templates, they should use render functions.")}
 
 /* hot reload */
 if (false) {(function () {
@@ -27,9 +27,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-77430f97", Component.options)
+    hotAPI.createRecord("data-v-02a7fb3f", Component.options)
   } else {
-    hotAPI.reload("data-v-77430f97", Component.options)
+    hotAPI.reload("data-v-02a7fb3f", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -41,7 +41,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 124:
+/***/ 149:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71,7 +71,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 125:
+/***/ 150:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -95,7 +95,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-77430f97", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-02a7fb3f", module.exports)
   }
 }
 

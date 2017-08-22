@@ -14,6 +14,13 @@
                 <el-input v-model="formCreated.schoolId" auto-complete="off"></el-input>
             </el-form-item>
 
+            <el-form-item v-if="showItem" label="Course" :label-width="formLabelWidth">
+                <el-select v-model="formCreated.course.id" placeholder="Please select a Course">
+                    <el-option v-for="(course, index) in courses.all" :key="index"
+                               :label="course.course" :value='course.id'></el-option>
+
+                </el-select>
+            </el-form-item>
             <el-form-item label="Category" :label-width="formLabelWidth">
                 <el-select v-model="formCreated.category.id" placeholder="Please select a Category">
                     <el-option v-for="category in categories.categories" :key="category.id"
@@ -42,15 +49,17 @@
 <script>
     import {change_view, state_view, fetchCategories, category} from './state_view'
     import {data as DATA}from './state'
+    import {fetchCourses, courses} from './../Course/courses'
     export default {
 
         data(){
             return {
+                courses: courses,
                 categories: category,
                 dialogFormVisible: state_view,
                 formCreated: {
                     name: '',
-
+                    course: {id: 7, course: ''},
                     category: {
                         name: '',
                         id: 3
@@ -67,15 +76,20 @@
             },
 
             categoryTitle: function () {
-                var vm = this
-                var category_id = this.formCreated.category.id
+                var vm = this;
+                var category_id = this.formCreated.category.id;
+                var course_id = this.formCreated.course.id;
+                var courseAll = this.courses.all
                 var categories = this.categories.categories;
-                var found = _.findIndex(categories, {id: category_id})
-
-                categories[found] ? this.formCreated.category.name = categories[found].name : ''
-                document.title = 'Create ' +this.formCreated.category.name
+                var courseFound = _.findIndex(courseAll, {id: course_id});
+                var found = _.findIndex(categories, {id: category_id});
+                courseAll[courseFound] ? this.formCreated.course.course = courseAll[courseFound].course : ''
+                categories[found] ? this.formCreated.category.name = categories[found].name : '';
+                document.title = 'Create ' + this.formCreated.category.name;
                 return categories[found] ? categories[found].name : ''
             }
+
+
         },
         filters: {
             ucFirstAllWords(str)
@@ -89,7 +103,8 @@
             }
         },
         mounted() {
-            fetchCategories('api/categories')
+            fetchCategories('api/categories');
+            fetchCourses('api/courses')
         },
         methods: {
             resetForm(formName) {
@@ -99,17 +114,29 @@
                 change_view()
             },
             postData(){
-                var vm = this
+                var vm = this;
 
                 var addData = this.formCreated;
-                axios.post('/api/visitors', {name: addData.name, category_id: addData.category.id, year: addData.year, schoolId: addData.schoolId})
+                axios.post('/api/visitors', {
+                    name: addData.name,
+                    course_id: addData.course.id,
+                    category_id: addData.category.id,
+                    year: addData.year,
+                    schoolId: addData.schoolId
+                })
                         .then(function (response) {
-                            DATA.data.unshift({id: response.data.data.id , schoolId: addData.schoolId, name: addData.name, category: {name: addData.category.name, id:  addData.category.id }, year: addData.year})
-                            vm.$notify({
-                                title: 'Success',
-                                message: response.data.success,
-                                type: 'success'
-                            });
+
+                            console.log({course:addData.course.course, id:addData.category.id})
+                            DATA.data.unshift({
+                                id: response.data.data.id,
+                                schoolId: addData.schoolId,
+                                name: addData.name,
+                                category: {name: addData.category.name, id: addData.category.id},
+                                course: {course:addData.course.course, id:addData.category.id},
+                                year: addData.year
+                            })
+
+
                         })
                         .catch(function (error) {
 

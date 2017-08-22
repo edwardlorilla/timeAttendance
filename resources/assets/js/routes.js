@@ -16,14 +16,14 @@ export default [
     {
         path: '/visitors/',
         component: Visitor,
-        name: 'visitor'
+        name: 'visitors'
     },
     {
-        path: '/timelogs/',
-        component: TimeLog,
-        name: 'timelogs'
-    },
+        path: '/timelogs',
 
+        component: TimeLog
+    }
+    
    /* {
         path: '/visitor/:id/edit',
         component: visitorEdit,

@@ -17,7 +17,7 @@ class VisitorController extends Controller
     public function index()
     {
         $visitors = Cache::rememberForever('visitor:all', function () {
-            return Visitor::with('category')->orderBy('updated_at', 'desc')->get();
+            return Visitor::with('category', 'course')->orderBy('updated_at', 'desc')->get();
         });
         return response()->json($visitors);
     }
@@ -40,17 +40,18 @@ class VisitorController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'name' => 'required|max:100',
             'year' => 'required',
             'category_id' => 'required',
+            'course_id' => 'required',
             'schoolId' => 'required'
         ]);
         $visitor = new Visitor();
         $visitor->name = $request->name;
         $visitor->year = $request->year;
         $visitor->category_id = $request->category_id;
+        $visitor->course_id = $request->course_id;
         $visitor->schoolId = $request->schoolId;
         $visitor->save();
         Cache::forget('visitor:all');
@@ -88,7 +89,7 @@ class VisitorController extends Controller
      */
     public function update(Request $request, Visitor $visitor)
     {
-
+//dd($request->all(), $visitor->toArray());
         $visitor->update(array_diff_assoc($request->all(),$visitor->toArray()));
 //        $visitor->name = $request->name;
 //        $visitor->year = $request->year;

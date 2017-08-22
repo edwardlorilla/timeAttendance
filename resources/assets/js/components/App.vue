@@ -16,6 +16,7 @@
                     </button>
 
                     <!-- Branding Image -->
+                    <p class="time shadow" v-text="currentTime"></p>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse" >
@@ -23,6 +24,8 @@
 
                     <ul  class="nav navbar-nav navbar-right">
                         <router-link tag="li" :to="{ name: 'login' }"><a>Login</a></router-link>
+                        <router-link tag="li" :to="{ path: '/timelogs' }"><a>Time Logs</a></router-link>
+                        <router-link tag="li" :to="{ name: 'visitors' }"><a>visitors</a></router-link>
                     </ul>
                 </div>
             </div>
@@ -61,13 +64,31 @@
 </style>
 
 <script>
+
     export default {
+        data(){
+            return {
+                currentTime: null
+            }
+        },
         computed:{
             dataDate(){
                 var d = new Date();
                 var vm = this
                 return d.getFullYear()
             }
+        },
+        methods: {
+            updateCurrentTime() {
+                this.currentTime = this.$moment().format('MMMM Do YYYY, h:mm:ss a');
+            }
+        },
+        created() {
+            var vm = this
+            vm.currentTime = this.$moment().format('MMMM Do YYYY, h:mm:ss a');
+            setInterval(function () {
+                return vm.updateCurrentTime();
+            }, 1 * 1000);
         },
         mounted() {
         }

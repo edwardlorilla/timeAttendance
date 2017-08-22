@@ -18,8 +18,11 @@ class CreateTimesTable extends Migration
             $table->unsignedInteger('visitor_id');
             $table->foreign('visitor_id')->references('id')->on('visitors');
             $table->string('LocaleDate')->nullable();
-            $table->string('LocaleStartTime')->nullable();
-            $table->string('LocaleEndTime')->nullable();
+            $table->bigInteger('LocaleStartTime')->nullable();
+            
+            $table->dateTime('tempStartTime')->nullable();
+            $table->dateTime('LocaleEndTime')->nullable();
+            $table->string('duration')->nullable();
             $table->timestamps();
         });
 

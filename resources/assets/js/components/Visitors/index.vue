@@ -1,11 +1,26 @@
 <template>
     <div class="container">
+
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-10 col-md-offset-1">
                 <create-data v-if="state_view.state_view"></create-data>
                 <edit-data v-if="isEdit.isToggle"></edit-data>
-                <data-tables :data="getData" :actions-def="actionsDef" :checkbox-filter-def="checkFilterDef"
+
+                <data-tables :custom-filters="customFilters" :data="getData" :actions-def="actionsDef"
+                             :checkbox-filter-def="checkFilterDef"
                              :action-col-def="actionColDef">
+                    <el-row slot="custom-tool-bar" style="margin-bottom: 10px">
+                    <el-col :span="6">
+                        <el-select placeholder="Filter Selected Level" v-model="customFilters[2].vals" multiple="multiple">
+                            <el-option v-for="(value, index) in pluckLevel" :key="index" :label="level(value)" :value="value"></el-option>
+                        </el-select>
+                    </el-col>
+                        <el-col :span="6">
+                        <el-select placeholder="Filter Selected Course" v-model="customFilters[1].vals" multiple="multiple">
+                            <el-option v-for="(value, index) in pluckCourses" :key="index" :label="value " :value="value"></el-option>
+                        </el-select>
+                    </el-col>
+                    </el-row>
                     <el-table-column v-for="title in titles" :key="title.label" :prop="title.prop" :label="title.label"
                                      sortable="custom">
                     </el-table-column>
@@ -23,9 +38,23 @@
         data() {
             var vm = this
             return {
+                courses: [],
                 isEdit: isEdit,
                 data: data,
                 state_view: state_view,
+
+
+                customFilters: [{
+                    vals: '',
+                    props: 'course',
+                }, {
+                    vals: []
+                },{
+                    vals: '',
+                    props: 'year',
+                }, {
+                    vals: []
+                }],
                 titles: [{
                     prop: "category",
                     label: "Categorize"
@@ -35,6 +64,9 @@
                 }, {
                     prop: "year",
                     label: "Level"
+                }, {
+                    prop: "course",
+                    label: "Course"
                 }],
                 actionsDef: {
                     colProps: {
@@ -78,7 +110,7 @@
                     label: "Actions",
                     def: [{
                         handler: function handler(row) {
-                            setEditData(row)
+                            setEditData(row.id)
                             isToggle()
                         },
                         name: "Edit"
@@ -99,20 +131,50 @@
 
         },
         computed: {
+            pluckCourses(){
+                var courses = this.getData
+                var map = _.map(courses, function(num, key){ return !_.isEmpty(num) ?num.course :null });
+                var unique = _.uniq(map);
+                var pluckFilter = _.filter(unique, function(fil){ return fil == "" ? null : fil  });
+                return pluckFilter
+            },
+            pluckLevel(){
+                var courses = this.getData
+                var map = _.map(courses, function(num, key){ return !_.isEmpty(num) ?num.year :null });
+                var unique = _.uniq(map);
+                var pluckFilter = _.filter(unique, function(fil){ return fil == "" ? null : fil  });
+                return pluckFilter
+            },
+
+
             getData(){
                 return _.map(this.data.data, function (num) {
-                    var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id')
+                    var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'course')
                     var object = {
                         id: pick.id,
                         name: pick.name,
                         year: pick.year,
                         category: pick.category ? pick.category.name : '',
+                        course: pick.course ? pick.course.course : '',
                     }
                     return object
                 })
             }
         },
         methods: {
+            level(year){
+                var level
+                if(year == '1'){
+                    level = year + 'st year'
+                }else if(year == '2'){
+                    level = year +  'nd year'
+                }else if (year == '3'){
+                    level = year +  'rd year'
+                }else{
+                    level = year +  'th year'
+                }
+                return level
+            },
             getRowActionsDef() {
                 let self = this
                 return [{

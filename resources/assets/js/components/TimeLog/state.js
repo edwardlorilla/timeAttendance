@@ -1,20 +1,27 @@
 /**
  * Created by Lorilla on 13/08/2017.
  */
-function fetch(urlFetch) {
-    axios.get(urlFetch).then(response => data.data = _.map(response.data, function (num) {
-        var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'schoolId')
-        var object = {
-            id: pick.id,
-            name: pick.name,
-            year: pick.year,
-            category: pick.category ? pick.category : '',
-            schoolId: pick.schoolId ? pick.schoolId : ''
-        }
-        return object
-    }))
+import {utcDate} from './event-log'
+function timeFetch(urlFetch) {
+    axios.get(urlFetch).then(response => timelogs.all = _.filter(response.data, function(o) { return o.LocaleEndTime == null; }))
 }
-export var data = {
-    data: []
+
+
+
+function addTimeId(userId, visitor){
+    var found = _.findIndex(timelogs.all, {visitor_id: visitor});
+    console.log(found)
+    timelogs.all[found].id = userId
 }
-export {fetch, data}
+
+function addEndTime(request){
+    var found = _.findIndex(timelogs.all, {id: request.id});
+    console.log(found)
+    timelogs.all[found].LocaleEndTime = utcDate();
+    _.setWith(timelogs.all[found], 'autoUpdate',0 );
+}
+
+export var timelogs = {
+    all: []
+}
+export {timeFetch,addEndTime,addTimeId}

@@ -31,6 +31,7 @@ class VisitorTableSeeder extends Seeder
             $new->year = $visitor['year'];
             $new->category_id = rand(1,4);
             $new->schoolId = rand(1000,3000);
+            $new->course_id = rand(1,7);
             $new->save();
         }
     }

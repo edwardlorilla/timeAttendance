@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('/visitors', 'VisitorController');
 Route::resource('/categories', 'CategoryController');
 Route::resource('/times', 'TimeController');
+Route::resource('/courses', 'CourseController');

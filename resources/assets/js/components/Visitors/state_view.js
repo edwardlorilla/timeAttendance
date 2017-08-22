@@ -19,6 +19,7 @@ function fetchCategories(urlFetch) {
     if(_.isEmpty(category.categories)){
         axios.get(urlFetch).then(response => category.categories = response.data)
     }
+    
 }
 
 export {fetchCategories, change_view}

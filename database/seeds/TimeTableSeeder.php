@@ -30,8 +30,8 @@ class TimeTableSeeder extends Seeder
             $new = new \App\Time();
             $new->visitor_id = $time['visitor_id'];
             $new->LocaleDate = '8/13/2017';
-            $new->LocaleStartTime = '9:36:40 PM';
-            $new->LocaleEndTime = '9:36:40 PM';
+            $new->LocaleStartTime = 1502725990369;
+            $new->LocaleEndTime = null;
             $new->save();
         }
     }

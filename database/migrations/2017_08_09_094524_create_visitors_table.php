@@ -15,9 +15,13 @@ class CreateVisitorsTable extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('category_id');
+            $table->unsignedInteger('category_id')->index()->nullable();
+            $table->unsignedInteger('course_id')->index()->nullable();
+            
             $table->foreign('category_id')->references('id')->on('categories');
+
             $table->string('name')->nullable();
+
             $table->string('schoolId')->nullable();
             $table->string('year')->nullable();;
             $table->timestamps();
