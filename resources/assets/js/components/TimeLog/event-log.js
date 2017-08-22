@@ -9,7 +9,7 @@ function timeFetch(urlFetch) {
             timeIn: pick.tempStartTime,
             timeOut: _.isEmpty(pick.LocaleEndTime) ? 'not yet finish!' : pick.LocaleEndTime,
             category: !_.isEmpty(pick.visitor.category) ? pick.visitor.category.name : '',
-            year: pick.visitor.year,
+            year: suffix(pick.visitor.year),
             visitor: !_.isEmpty(pick.visitor) ? pick.visitor.name : '',
             schoolId: !_.isEmpty(pick.visitor) ? pick.visitor.schoolId : '',
             LocalDate:  pick.LocaleDate ,
@@ -53,6 +53,20 @@ function addEvent(request) {
 
     console.log(object)
     eventlogs.all.unshift(object)
+}
+
+function suffix(year){
+    var level
+    if(year == '1'){
+        level = year + 'st year'
+    }else if(year == '2'){
+        level = year +  'nd year'
+    }else if (year == '3'){
+        level = year +  'rd year'
+    }else{
+        level = year +  'th year'
+    }
+    return level
 }
 
 export {utcDate, timeFetch, updateEvent, addEvent}

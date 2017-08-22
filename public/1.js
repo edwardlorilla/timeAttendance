@@ -1,14 +1,14 @@
 webpackJsonp([1],{
 
-/***/ 267:
+/***/ 271:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(6)(
+var Component = __webpack_require__(5)(
   /* script */
-  __webpack_require__(272),
+  __webpack_require__(276),
   /* template */
-  __webpack_require__(273),
+  __webpack_require__(277),
   /* styles */
   null,
   /* scopeId */
@@ -41,12 +41,15 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 272:
+/***/ 276:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_state__ = __webpack_require__(155);
+//
+//
+//
 //
 //
 //
@@ -72,7 +75,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 273:
+/***/ 277:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -97,7 +100,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "name": "event-log",
       "label": "Event Log"
     }
-  }, [(_vm.selectedPaned.tabs == 'event-log') ? _c('event-log') : _vm._e()], 1)], 1)
+  }, [(_vm.selectedPaned.tabs == 'event-log') ? _c('event-log') : _vm._e()], 1), _vm._v(" "), _c('el-tab-pane', {
+    attrs: {
+      "name": "event-report",
+      "label": "Event Report"
+    }
+  }, [(_vm.selectedPaned.tabs == 'event-report') ? _c('event-report') : _vm._e()], 1)], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

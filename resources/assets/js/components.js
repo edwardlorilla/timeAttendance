@@ -6,8 +6,15 @@ import createData from  './components/Visitors/create.vue'
 import editData from  './components/Visitors/edit.vue'
 import portfolioItem from  './components/TimeLog/portfolio-item.vue'
 import eventLog from  './components/TimeLog/event-log.vue'
+import eventReport from  './components/TimeLog/event-report.vue'
 import timeTracker from  './components/TimeLog/timeTracker.vue'
+import Crosstab from 'vue-crosstab'
 
+Vue.component('cross-tabs', function (resolve, reject) {
+    setTimeout(function () {
+        resolve(Crosstab)
+    }, 100)
+});
 
 Vue.component('create-data', function (resolve, reject) {
     setTimeout(function () {
@@ -33,5 +40,10 @@ Vue.component('event-log', function (resolve) {
 Vue.component('time-tracker', function (resolve) {
     setTimeout(function () {
         resolve(timeTracker)
+    }, 100)
+});
+Vue.component('event-report', function (resolve) {
+    setTimeout(function () {
+        resolve(eventReport)
     }, 100)
 });
