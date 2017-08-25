@@ -100,7 +100,7 @@
                 var vm = this
                 if (vm.foundUser) {
                     var userDetail = vm.foundUser.user
-                    disableSelected(userDetail, true)
+                    disableSelected(userDetail, 1)
                 }
                 vm.loading = true
                 var addTime = {
@@ -132,7 +132,7 @@
                             visitor_id: addTime.visitor_id,
                             LocaleStartTime: addTime.LocaleStartTime,
                             LocaleEndTime: addTime.LocaleEndTime,
-
+                            disabled: 1
                         })
                                 .then(function (response) {
 
@@ -149,9 +149,12 @@
             finishRow(userId)
             {
                 addEndTime(userId)
-                console.log(userId)
+                disableSelected(userId, 0)
+                var obj = userId
+                var obj2 = {disabled: 0}
+                var defaultObj = _.defaults(obj, obj2);
                 setTimeout(function () {
-                    axios.patch('/api/times/' + userId.id, userId)
+                    axios.patch('/api/times/' + userId.id, defaultObj)
                             .then(function (response) {
                                 console.log('update', response.data.data)
                                 updateEvent(response.data.data)

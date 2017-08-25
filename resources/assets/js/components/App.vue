@@ -23,14 +23,12 @@
                     <!-- Left Side Of Navbar -->
 
                     <ul  class="nav navbar-nav navbar-right">
-                        <router-link tag="li" :to="{ name: 'login' }"><a>Login</a></router-link>
-                        <router-link tag="li" :to="{ path: '/timelogs' }"><a>Time Logs</a></router-link>
-                        <router-link tag="li" :to="{ name: 'visitors' }"><a>visitors</a></router-link>
+
                     </ul>
                 </div>
             </div>
         </nav>
-        <transition name="fade" mode="out-in" appear >
+
             <router-view ></router-view>
         </transition>
         <!--<div class="navbar navbar-default navbar-fixed-bottom">

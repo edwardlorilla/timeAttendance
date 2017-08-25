@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Visitor extends Model
 {
     protected $fillable = [
-        'name', 'year','schoolId', 'category_id', 'course_id'
+        'name', 'year','schoolId', 'category_id', 'course_id', 'disabled'
     ];
     public function category()
     {
@@ -20,5 +20,10 @@ class Visitor extends Model
     public function times()
     {
         return $this->hasMany(Time::class);
+    }
+
+    public function photos()
+    {
+        return $this->belongsToMany(Photo::class);
     }
 }

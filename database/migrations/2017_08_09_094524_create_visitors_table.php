@@ -19,7 +19,7 @@ class CreateVisitorsTable extends Migration
             $table->unsignedInteger('course_id')->index()->nullable();
             
             $table->foreign('category_id')->references('id')->on('categories');
-
+            $table->boolean('disabled')->default(false);
             $table->string('name')->nullable();
 
             $table->string('schoolId')->nullable();

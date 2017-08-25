@@ -1,14 +1,14 @@
 webpackJsonp([0],{
 
-/***/ 270:
+/***/ 281:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var Component = __webpack_require__(5)(
   /* script */
-  __webpack_require__(274),
+  __webpack_require__(285),
   /* template */
-  __webpack_require__(275),
+  __webpack_require__(286),
   /* styles */
   null,
   /* scopeId */
@@ -41,12 +41,12 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 274:
+/***/ 285:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__state_view__ = __webpack_require__(22);
 //
 //
@@ -203,13 +203,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         getData: function getData() {
             return _.map(this.data.data, function (num) {
-                var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'course');
+                var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos');
                 var object = {
                     id: pick.id,
                     name: pick.name,
                     year: pick.year,
                     category: pick.category ? pick.category.name : '',
-                    course: pick.course ? pick.course.course : ''
+                    course: pick.course ? pick.course.course : '',
+                    avatar: !_.isEmpty(pick.photos) ? '/images/' + pick.photos : ''
                 };
                 return object;
             });
@@ -246,7 +247,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 275:
+/***/ 286:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;

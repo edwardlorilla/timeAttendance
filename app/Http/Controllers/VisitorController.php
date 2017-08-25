@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Photo;
 use App\Visitor;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class VisitorController extends Controller
     public function index()
     {
         $visitors = Cache::rememberForever('visitor:all', function () {
-            return Visitor::with('category', 'course')->orderBy('updated_at', 'desc')->get();
+            return Visitor::with('category', 'course', 'photos')->orderBy('updated_at', 'desc')->get();
         });
         return response()->json($visitors);
     }
@@ -40,6 +41,14 @@ class VisitorController extends Controller
      */
     public function store(Request $request)
     {
+
+        $photo = new Photo();
+        if ($file = $request->file('avatar')) {
+            $name = time() . $file->getClientOriginalName();
+            $file->move('images', $name);
+            $photo = $photo->create(['file' => $name]);
+        }
+
         $this->validate($request, [
             'name' => 'required|max:100',
             'year' => 'required',
@@ -47,13 +56,16 @@ class VisitorController extends Controller
             'course_id' => 'required',
             'schoolId' => 'required'
         ]);
-        $visitor = new Visitor();
-        $visitor->name = $request->name;
-        $visitor->year = $request->year;
-        $visitor->category_id = $request->category_id;
-        $visitor->course_id = $request->course_id;
-        $visitor->schoolId = $request->schoolId;
+        $visitor = new Visitor([
+            'name' => $request->name,
+            'year' => $request->year,
+            'category_id' => $request->category_id,
+            'course_id' => $request->course_id,
+            'disabled' => 0,
+            'schoolId' => $request->schoolId,
+        ]);
         $visitor->save();
+        $visitor->photos()->attach($photo->id);
         Cache::forget('visitor:all');
         return response()->json(['data' => $visitor, 'success' => 'Success storing newly created visitor'], 200);
     }
@@ -89,7 +101,6 @@ class VisitorController extends Controller
      */
     public function update(Request $request, Visitor $visitor)
     {
-//dd($request->all(), $visitor->toArray());
         $visitor->update(array_diff_assoc($request->all(),$visitor->toArray()));
 //        $visitor->name = $request->name;
 //        $visitor->year = $request->year;

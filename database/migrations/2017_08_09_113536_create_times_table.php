@@ -19,7 +19,7 @@ class CreateTimesTable extends Migration
             $table->foreign('visitor_id')->references('id')->on('visitors');
             $table->string('LocaleDate')->nullable();
             $table->bigInteger('LocaleStartTime')->nullable();
-            
+            $table->boolean('disabled')->default(false);
             $table->dateTime('tempStartTime')->nullable();
             $table->dateTime('LocaleEndTime')->nullable();
             $table->string('duration')->nullable();

@@ -9,7 +9,7 @@ import eventLog from  './components/TimeLog/event-log.vue'
 import eventReport from  './components/TimeLog/event-report.vue'
 import timeTracker from  './components/TimeLog/timeTracker.vue'
 import Crosstab from 'vue-crosstab'
-
+import pictureUpload from 'vue-picture-input'
 Vue.component('cross-tabs', function (resolve, reject) {
     setTimeout(function () {
         resolve(Crosstab)
@@ -45,5 +45,10 @@ Vue.component('time-tracker', function (resolve) {
 Vue.component('event-report', function (resolve) {
     setTimeout(function () {
         resolve(eventReport)
+    }, 100)
+});
+Vue.component('picture-input', function (resolve) {
+    setTimeout(function () {
+        resolve(pictureUpload)
     }, 100)
 });

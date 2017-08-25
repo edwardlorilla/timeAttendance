@@ -6,9 +6,7 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
 
-import VueRouter from 'vue-router';
 import routes from './routes.js';
 import App from './components/App.vue';
 import ElementUI from 'element-ui'
@@ -31,7 +29,7 @@ Object.defineProperty(Vue.prototype, '$moment', {
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.use(VueRouter);
+
 Vue.use(ElementUI);
 Vue.use(DataTables);
 locale.use(lang);
@@ -51,11 +49,17 @@ const router = new VueRouter({
     routes: routes
 });
 
-const app = new Vue({
+/*const app = new Vue({
     el: '#app',
     data: {
         moment
     },
     router,
     render: r => r(App)
-});
+});*/
+const app = new Vue({
+    data: {
+        moment
+    },
+    router
+}).$mount('#app');

@@ -2,42 +2,75 @@
     <el-dialog :title="'Edit ' + dialogFormVisibles.name"
                :visible.sync="dialogFormVisible.isToggle"
                :before-close="handleClose"
+               size="large"
     >
-        <el-form ref="validateForm" :model="dialogFormVisible.editData" :rules="rules" label-width="120px">
 
-            <el-form-item label="Name:"  prop="name">
-                <el-input v-model="dialogFormVisible.editData.name"></el-input>
-            </el-form-item>
+        <el-row :gutter="20">
+            <el-col :span="16">
+                <el-form ref="validateForm" :model="dialogFormVisible.editData" :rules="rules" label-width="120px">
 
-            <el-form-item v-if="isShow" label="School ID:" prop="schoolId">
-                <el-input v-model="dialogFormVisible.editData.schoolId"></el-input>
-            </el-form-item>
+                    <el-form-item label="Name:"  prop="name">
+                        <el-input v-model="dialogFormVisible.editData.name"></el-input>
+                    </el-form-item>
 
-            <el-form-item v-if="isShow" label="Course" required>
-                <el-select v-model="dialogFormVisible.editData.course.id" placeholder="Please select a Course">
-                    <el-option v-for="(course, index) in courses.all" :key="index"
-                               :label="course.course" :value='course.id'></el-option>
+                    <el-form-item v-if="isShow" label="School ID:" prop="schoolId">
+                        <el-input v-model="dialogFormVisible.editData.schoolId"></el-input>
+                    </el-form-item>
 
-                </el-select>
-            </el-form-item>
+                    <el-form-item v-if="isShow" label="Course" required>
+                        <el-select v-model="dialogFormVisible.editData.course.id" placeholder="Please select a Course">
+                            <el-option v-for="(course, index) in courses.all" :key="index"
+                                       :label="course.course" :value='course.id'></el-option>
 
-            <el-form-item label="Category" required>
-                <el-select v-model="dialogFormVisible.editData.category.id" id="Category">
-                    <el-option v-for="category in categories.categories" :key="category.id"
-                               :label="category.name | ucFirstAllWords" :value='category.id'></el-option>
-                </el-select>
+                        </el-select>
+                    </el-form-item>
 
-            </el-form-item>
+                    <el-form-item label="Category" required>
+                        <el-select v-model="dialogFormVisible.editData.category.id" id="Category">
+                            <el-option v-for="category in categories.categories" :key="category.id"
+                                       :label="category.name | ucFirstAllWords" :value='category.id'></el-option>
+                        </el-select>
 
-            <el-form-item v-if="isShow" label="Year" required>
-                <el-select id="year" v-model="dialogFormVisible.editData.year" placeholder="Please select a year">
-                    <el-option label="1st year" value="1"></el-option>
-                    <el-option label="2nd year" value="2"></el-option>
-                    <el-option label="3rd year" value="3"></el-option>
-                    <el-option label="4th year" value="4"></el-option>
-                </el-select>
-            </el-form-item>
-        </el-form>
+                    </el-form-item>
+
+                    <el-form-item v-if="isShow" label="Year" required>
+                        <el-select id="year" v-model="dialogFormVisible.editData.year" placeholder="Please select a year">
+                            <el-option label="1st year" value="1"></el-option>
+                            <el-option label="2nd year" value="2"></el-option>
+                            <el-option label="3rd year" value="3"></el-option>
+                            <el-option label="4th year" value="4"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col :span="8">
+                <picture-input
+                        :prefill="dialogFormVisible.editData.photos ? '/images/' +dialogFormVisible.editData.photos : ''"
+
+                        ref="pictureInput"
+                        @change="onChanged"
+                        @remove="onRemoved"
+                        :width="500"
+                        :removable="true"
+                        removeButtonClass="ui red button"
+                        :height="500"
+                        accept="image/jpeg, image/png, image/gif"
+                        buttonClass="ui button primary"
+                        :customStrings="{
+  upload: '<h1>Upload it!</h1>',
+  drag: 'Drag and drop your image here'}">
+
+                </picture-input>
+
+                <!--<img v-else @click="onRemoved" width="500" :src="'/images/' +dialogFormVisible.editData.photos" :alt="dialogFormVisible.editData.photos">
+                <button v-if="dialogFormVisible.editData.photos" @click="onChanged">Change Photo</button>
+                <button v-if="dialogFormVisible.editData.photos" @click="onRemoved">Remove Photo</button>
+                <button @click.prevent="attemptUpload" v-bind:class="{ disabled: !image }">
+                    Upload
+                </button>-->
+            </el-col>
+        </el-row>
+        </el-row>
          <span slot="footer" class="dialog-footer">
    <button class="btn btn-primary" @click="postData('validateForm')">{{'Edit ' + dialogFormVisible.editData.name}}
 
@@ -54,6 +87,7 @@
 
         data(){
             return {
+                image: '',
                 courses: courses,
                 categories: category,
                 dialogFormVisible: isEdit,
@@ -145,7 +179,18 @@
                     }
                 });
 
-            }
+            },
+            onChanged() {
+                console.log("New picture loaded");
+                if (this.$refs.pictureInput.file) {
+                    this.image = this.$refs.pictureInput.file;
+                } else {
+                    console.log("Old browser. No support for Filereader API");
+                }
+            },
+            onRemoved() {
+                this.dialogFormVisible.editData.photos = '';
+            },
         }
     }
 </script>

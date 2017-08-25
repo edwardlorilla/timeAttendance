@@ -156,11 +156,6 @@
                     },
                     name: 'Edit'
                 }]
-            },
-            testDate(){
-                var vm = this
-                var date = new Date(vm.$moment('2017-08-21 16:08:58').format('YYYY-MM-DD'));
-                console.log(date)
             }
 
         }

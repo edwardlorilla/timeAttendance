@@ -46,7 +46,7 @@ class TimeController extends Controller
             'visitor_id' => 'required',
             'LocaleStartTime' => 'required',
             'LocaleEndTime' => '',
-            'tempStartTime' => '',
+            'tempStartTime' => ''
         ]);
         $time = new Time();
         $time->LocaleDate = $request->LocaleDate;
@@ -54,6 +54,7 @@ class TimeController extends Controller
         $time->LocaleStartTime = $request->LocaleStartTime;
         $time->LocaleEndTime = $request->LocaleEndTime;
         $time->tempStartTime = $request->tempStartTime;
+        $time->disabled = $request->disabled;
         $time->save();
         Cache::forget('times:all');
         return response()->json(['data' => $time, 'success' => 'Success storing newly created visitor'], 200);
@@ -103,8 +104,7 @@ class TimeController extends Controller
 
 
 
-
-        $time->update(array_merge($duration, array_diff_assoc($request->only('id', 'visitor_id', 'LocaleDate', 'LocaleStartTime','duration', 'tempStartTime', 'LocaleEndTime', 'updated_at', 'created_at'), $time->toArray())));
+        $time->update(array_merge($duration, array_diff_assoc($request->only('id', 'visitor_id', 'LocaleDate', 'LocaleStartTime','duration', 'tempStartTime', 'LocaleEndTime', 'updated_at', 'created_at', 'disabled'), $time->toArray())));
         Cache::forget('times:' . $time->id);
         Cache::forget('times:all');
 //

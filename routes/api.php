@@ -20,3 +20,4 @@ Route::resource('/visitors', 'VisitorController');
 Route::resource('/categories', 'CategoryController');
 Route::resource('/times', 'TimeController');
 Route::resource('/courses', 'CourseController');
+

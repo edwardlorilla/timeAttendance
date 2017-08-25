@@ -11,6 +11,9 @@
 |
 */
 
-Route::any('{all}', function () {
+/*Route::any('{all}', function () {
     return view('welcome');
-})->where(['all' => '.*']);
+})->where(['all' => '.*']);*/
+Auth::routes();
+
+Route::get('{all}', 'HomeController@index')->where(['all' => '[\/\w\.-]*'])->name('home');

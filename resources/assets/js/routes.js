@@ -20,7 +20,7 @@ export default [
     },
     {
         path: '/timelogs',
-
+        name: 'timelogs',
         component: TimeLog
     }
     

@@ -4,8 +4,8 @@
 function fetch(urlFetch) {
 
     axios.get(urlFetch).then(response => data.data = _.map(response.data, function (num) {
-      
-        var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'schoolId', 'course');
+
+        var pick = _.pick(num, 'id', 'photos', 'name', 'category', 'year', 'category_id', 'schoolId', 'course', 'disabled');
         var object = {
             id: pick.id,
             name: pick.name,
@@ -13,6 +13,8 @@ function fetch(urlFetch) {
             category: pick.category ? pick.category : '',
             schoolId: pick.schoolId ? pick.schoolId : '',
             course: pick.course ? pick.course : '',
+            disabled: pick.disabled != 0 ? true : false,
+            photos: _.isEmpty(pick.photos) ? '' : (pick.photos[0] ? pick.photos[0].file : '' )
         };
         return object
     }))
@@ -25,31 +27,31 @@ function findIndex(id) {
 }
 
 
-function findId(id){
-    var user =_.findIndex(data.data, {id:id});
-    return  data.data[user]
+function findId(id) {
+    var user = _.findIndex(data.data, {id: id});
+    return data.data[user]
 }
 
 
 function dataUpdate(request, message) {
 
     var editData = request;
-    var user =   _.findIndex(data.data, {id: request.id});
+    var user = _.findIndex(data.data, {id: request.id});
 
 
-
-    data.data[user]= request
+    data.data[user] = request
     axios.patch('/api/visitors/' + editData.id, {
         id: editData.id,
         category_id: editData.category.id,
         name: editData.name,
         schoolId: editData.schoolId,
         year: editData.year,
-        course_id: editData.course.id
+        course_id: editData.course.id,
+        disabled: 0
     })
 
         .then(function (response) {
-            if(response){
+            if (response) {
                 message
             }
 
@@ -60,14 +62,26 @@ function dataUpdate(request, message) {
         });
 
 
-
 }
 
 function disableSelected(request, change) {
-console.log(request)
-    var found = _.findIndex(data.data, {id: request.id});
+    var ID = change == 1 ? request.id : request.visitor_id
+    var found = _.findIndex(data.data, {id: ID});
 
-    _.setWith(data.data[found], 'disabled',change );
+    console.log(request, change)
+
+    data.data[found].disabled = change != 0 ? true : false;
+
+    axios.patch('/api/visitors/' + ID, {
+        disabled: change
+    })
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
 }
 
 function deleteData(dataId) {
@@ -100,15 +114,13 @@ function isToggle() {
 function setEditData(row) {
     var vm = isEdit
     var found = _.findIndex(data.data, {id: row})
-    _.setWith(data.data[found], 'category_id', data.data[found].category.id );
+    _.setWith(data.data[found], 'category_id', data.data[found].category.id);
     vm.editData = data.data[found]
 }
 
 
-
-
 export  {
-    setEditData, isToggle, fetch, findIndex, dataUpdate, deleteData, disableSelected, findId, 
+    setEditData, isToggle, fetch, findIndex, dataUpdate, deleteData, disableSelected, findId,
 }
 
 
