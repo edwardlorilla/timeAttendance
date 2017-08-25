@@ -5,12 +5,13 @@ function fetch(urlFetch) {
 
     axios.get(urlFetch).then(response => data.data = _.map(response.data, function (num) {
 
-        var pick = _.pick(num, 'id', 'photos', 'name', 'category', 'year', 'category_id', 'schoolId', 'course', 'disabled');
+        var pick = _.pick(num, 'id', 'photos', 'name', 'category','gender', 'year', 'category_id', 'schoolId', 'course', 'disabled');
         var object = {
             id: pick.id,
             name: pick.name,
             year: pick.year,
             category: pick.category ? pick.category : '',
+            gender: pick.gender ? _.toString(pick.gender.id) : '',
             schoolId: pick.schoolId ? pick.schoolId : '',
             course: pick.course ? pick.course : '',
             disabled: pick.disabled != 0 ? true : false,
@@ -47,7 +48,8 @@ function dataUpdate(request, message) {
         schoolId: editData.schoolId,
         year: editData.year,
         course_id: editData.course.id,
-        disabled: 0
+        disabled: 0,
+        gender_id: editData.gender
     })
 
         .then(function (response) {

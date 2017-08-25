@@ -12,6 +12,16 @@
                                   :label-width="formLabelWidth">
                         <el-input v-model="formCreated.name" auto-complete="off"></el-input>
                     </el-form-item>
+                    <el-form-item label="Gender"
+                                  prop="gender"
+                                  :rules="[
+                              { required: true, message: 'The gender field is required.', trigger: 'blur' },
+                            ]"
+                                  :label-width="formLabelWidth">
+                        <el-radio class="radio" v-model="formCreated.gender" label="1">Male</el-radio>
+                        <el-radio class="radio" v-model="formCreated.gender" label="0">Female</el-radio>
+                    </el-form-item>
+
                     <el-form-item v-if="showItem" label="School ID" :label-width="formLabelWidth">
                         <el-input v-model="formCreated.schoolId" auto-complete="off"></el-input>
                     </el-form-item>
@@ -60,9 +70,7 @@
 
                 </picture-input>
 
-                <button @click.prevent="attemptUpload" v-bind:class="{ disabled: !image }">
-                    Upload
-                </button>
+
             </el-col>
         </el-row>
 
@@ -79,7 +87,7 @@
 </style>
 
 <script>
-    import FormDataPost from './../form_api/form'
+    import {FormDataPost} from './../form_api/form'
     import {change_view, state_view, fetchCategories, category} from './state_view'
     import {data as DATA}from './state'
     import {fetchCourses, courses} from './../Course/courses'
@@ -93,6 +101,7 @@
                 dialogFormVisible: state_view,
                 formCreated: {
                     name: '',
+                    gender: 1,
                     course: {id: 7, course: ''},
                     category: {
                         name: '',
@@ -128,13 +137,8 @@
         filters: {
             ucFirstAllWords(str)
             {
-                var pieces = str.split(" ");
-                for (var i = 0; i < pieces.length; i++) {
-                    var j = pieces[i].charAt(0).toUpperCase();
-                    pieces[i] = j + pieces[i].substr(1);
-                }
-                return pieces.join(" ");
-            }
+                return _.upperFirst(str);
+            },
         },
         mounted() {
             fetchCategories('api/categories');
@@ -157,7 +161,8 @@
                     category_id: addData.category.id,
                     year: addData.year,
                     schoolId: addData.schoolId,
-                    photo_raw: vm.image
+                    photo_raw: vm.photo,
+                    gender_id: addData.gender
                 })
                         .then(function (response) {
                             vm.image = ''
@@ -168,7 +173,9 @@
                                 name: addData.name,
                                 category: {name: addData.category.name, id: addData.category.id},
                                 course: {course: addData.course.course, id: addData.category.id},
-                                year: addData.year
+                                year: addData.year,
+                                gender:addData.gender
+
                             })
                             vm.$notify({
                                 title: 'Success',

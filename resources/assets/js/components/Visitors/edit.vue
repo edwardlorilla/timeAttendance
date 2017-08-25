@@ -4,15 +4,22 @@
                :before-close="handleClose"
                size="large"
     >
-
         <el-row :gutter="20">
             <el-col :span="16">
                 <el-form ref="validateForm" :model="dialogFormVisible.editData" :rules="rules" label-width="120px">
 
-                    <el-form-item label="Name:"  prop="name">
+                    <el-form-item label="Name:" prop="name">
                         <el-input v-model="dialogFormVisible.editData.name"></el-input>
                     </el-form-item>
-
+                    <el-form-item label="Gender"
+                                  prop="gender"
+                                  :rules="[
+                              { required: true, message: 'The gender field is required.', trigger: 'blur' },
+                            ]"
+                                  :label-width="formLabelWidth">
+                        <el-radio class="radio" v-model="dialogFormVisible.editData.gender" label="1">Male</el-radio>
+                        <el-radio class="radio" v-model="dialogFormVisible.editData.gender" label="0">Female</el-radio>
+                    </el-form-item>
                     <el-form-item v-if="isShow" label="School ID:" prop="schoolId">
                         <el-input v-model="dialogFormVisible.editData.schoolId"></el-input>
                     </el-form-item>
@@ -34,7 +41,8 @@
                     </el-form-item>
 
                     <el-form-item v-if="isShow" label="Year" required>
-                        <el-select id="year" v-model="dialogFormVisible.editData.year" placeholder="Please select a year">
+                        <el-select id="year" v-model="dialogFormVisible.editData.year"
+                                   placeholder="Please select a year">
                             <el-option label="1st year" value="1"></el-option>
                             <el-option label="2nd year" value="2"></el-option>
                             <el-option label="3rd year" value="3"></el-option>
@@ -64,17 +72,17 @@
 
                 <!--<img v-else @click="onRemoved" width="500" :src="'/images/' +dialogFormVisible.editData.photos" :alt="dialogFormVisible.editData.photos">
                 <button v-if="dialogFormVisible.editData.photos" @click="onChanged">Change Photo</button>
-                <button v-if="dialogFormVisible.editData.photos" @click="onRemoved">Remove Photo</button>
+                <button v-if="dialogFormVisible.editData.photos" @click="onRemoved">Remove Photo</button>-->
                 <button @click.prevent="attemptUpload" v-bind:class="{ disabled: !image }">
                     Upload
-                </button>-->
+                </button>
             </el-col>
         </el-row>
         </el-row>
          <span slot="footer" class="dialog-footer">
    <button class="btn btn-primary" @click="postData('validateForm')">{{'Edit ' + dialogFormVisible.editData.name}}
 
-   </button> <el-button @click="closeData">Cancel</el-button><el-button @click="resetForm('validateForm')">Reset</el-button>
+   </button> <el-button @click="closeData">Cancel</el-button>
   </span>
     </el-dialog>
 </template>
@@ -83,10 +91,14 @@
     import {isEdit, isToggle, dataUpdate} from './state'
     import {courses, fetchCourses} from './../Course/courses'
     import {fetchCategories, category} from './state_view'
+    import {FormDataUpdate} from './../form_api/form'
     export default {
 
         data(){
             return {
+
+                cloneData: null,
+
                 image: '',
                 courses: courses,
                 categories: category,
@@ -96,10 +108,10 @@
 
                 rules: {
                     name: [
-                        { required: true, message: 'Please input name', trigger: 'blur' },
+                        {required: true, message: 'Please input name', trigger: 'blur'},
                     ],
                     schoolId: [
-                        { required: true, message: 'Please input school I.D', trigger: 'blur' },
+                        {required: true, message: 'Please input school I.D', trigger: 'blur'},
                     ],
                 }
 
@@ -131,33 +143,82 @@
             },
             isReady(){
                 return !_.isEmpty(this.dialogFormVisibles.category.id && this.dialogFormVisibles.course.id && this.dialogFormVisibles.name && this.dialogFormVisibles.schoolId && this.dialogFormVisibles.year)
-            }
+            },
 
 
         },
         filters: {
             ucFirstAllWords(str)
             {
-                var pieces = str.split(" ");
-                for (var i = 0; i < pieces.length; i++) {
-                    var j = pieces[i].charAt(0).toUpperCase();
-                    pieces[i] = j + pieces[i].substr(1);
-                }
-                return pieces.join(" ");
+                return _.upperFirst(str);
+            },
+            toString(int){
+                return _.toString(int)
             }
         },
         mounted() {
             fetchCategories('api/categories');
             fetchCourses('api/courses');
+            this.cloneData = _.cloneDeep(this.dialogFormVisible.editData)
         },
         methods: {
+            checkedEdit(){
+                var vm = this
+                return !_.isEmpty(vm.cloneData) ? vm.cloneData.category.id === vm.dialogFormVisibles.category.id &&
+                vm.cloneData.course.id === vm.dialogFormVisibles.course.id &&
+                vm.cloneData.name === vm.dialogFormVisibles.name &&
+                vm.cloneData.schoolId === vm.dialogFormVisibles.schoolId &&
+                vm.cloneData.year === vm.dialogFormVisibles.year : ''
+            },
+            attemptUpload(){
+                var vm = this.dialogFormVisible.editData
+                var _this = this
+                FormDataUpdate('/api/editPhoto', {avatar: _this.image, id: vm.id})
+                        .then(function (response) {
+                            _this.dialogFormVisible.editData.photos = response.data.photo_name;
+                        })
+                        .catch(function (err) {
+                            console.error(err);
+                        });
+            },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
             handleClose(done) {
                 var vm = this
-                if(vm.isReady){
+                if (vm.checkedEdit()) {
                     vm.closeData()
+                } else {
+                    vm.$confirm('Are you sure to close this dialog without saving it?', 'Warning', {
+                        confirmButtonText: 'Save',
+                        cancelButtonText: 'Cancel',
+                        type: 'info'
+                    })
+                            .then(function () {
+                                vm.postData('validateForm')
+                            })
+                            .catch(function () {
+                                var edit = vm.dialogFormVisible.editData
+                                console.log(edit.category.id == vm.cloneData.category.id)
+                                if (edit.category.id != vm.cloneData.category.id){
+                                    edit.category.id = vm.cloneData.category.id
+                                }
+                                if (edit.course.id != vm.cloneData.course.id){
+                                    edit.course.id = vm.cloneData.course.id
+                                }
+
+                                if (edit.name != vm.cloneData.name){
+                                    console.log('name', vm.cloneData.name)
+                                    edit.name = vm.cloneData.name
+                                }
+                                if (edit.schoolId != vm.cloneData.schoolId){
+                                    edit.schoolId = vm.cloneData.schoolId
+                                }
+                                if (edit.year != vm.cloneData.year){
+                                    edit.year = vm.year
+                                }
+                                vm.closeData()
+                            });
                 }
             },
             closeData(){
@@ -189,7 +250,7 @@
                 }
             },
             onRemoved() {
-                this.dialogFormVisible.editData.photos = '';
+                this.image = '';
             },
         }
     }

@@ -17,7 +17,6 @@ import locale from 'element-ui/lib/locale'
 import components from './components'
 import VueTimeago from 'vue-timeago'
 import moment from 'moment'
-
 Object.defineProperty(Vue.prototype, '$moment', {
     get(){
         return this.$root.moment
