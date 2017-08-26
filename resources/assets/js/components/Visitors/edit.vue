@@ -80,7 +80,7 @@
         </el-row>
         </el-row>
          <span slot="footer" class="dialog-footer">
-   <button class="btn btn-primary" @click="postData('validateForm')">{{'Edit ' + dialogFormVisible.editData.name}}
+   <button class="btn btn-primary" @click="handleClose()">{{'Edit ' + dialogFormVisible.editData.name}}
 
    </button> <el-button @click="closeData">Cancel</el-button>
   </span>
@@ -98,7 +98,6 @@
             return {
 
                 cloneData: null,
-
                 image: '',
                 courses: courses,
                 categories: category,
@@ -184,12 +183,12 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
-            handleClose(done) {
+            handleClose() {
                 var vm = this
                 if (vm.checkedEdit()) {
                     vm.closeData()
                 } else {
-                    vm.$confirm('Are you sure to close this dialog without saving it?', 'Warning', {
+                    vm.$confirm('Are you sure to close this dialog without saving it?', 'Info', {
                         confirmButtonText: 'Save',
                         cancelButtonText: 'Cancel',
                         type: 'info'
@@ -199,22 +198,20 @@
                             })
                             .catch(function () {
                                 var edit = vm.dialogFormVisible.editData
-                                console.log(edit.category.id == vm.cloneData.category.id)
-                                if (edit.category.id != vm.cloneData.category.id){
+                                if (edit.category.id != vm.cloneData.category.id) {
                                     edit.category.id = vm.cloneData.category.id
                                 }
-                                if (edit.course.id != vm.cloneData.course.id){
+                                if (edit.course.id != vm.cloneData.course.id) {
                                     edit.course.id = vm.cloneData.course.id
                                 }
 
-                                if (edit.name != vm.cloneData.name){
-                                    console.log('name', vm.cloneData.name)
+                                if (edit.name != vm.cloneData.name) {
                                     edit.name = vm.cloneData.name
                                 }
-                                if (edit.schoolId != vm.cloneData.schoolId){
+                                if (edit.schoolId != vm.cloneData.schoolId) {
                                     edit.schoolId = vm.cloneData.schoolId
                                 }
-                                if (edit.year != vm.cloneData.year){
+                                if (edit.year != vm.cloneData.year) {
                                     edit.year = vm.year
                                 }
                                 vm.closeData()
@@ -229,6 +226,7 @@
                 var vm = _this.dialogFormVisible.editData
                 _this.$refs[formName].validate(function (valid) {
                     if (valid) {
+                        this.cloneData = _.cloneDeep(this.dialogFormVisible.editData)
                         dataUpdate(vm, _this.$notify({
                             title: 'Success',
                             message: 'Edit Successfully',

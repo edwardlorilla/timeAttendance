@@ -88654,7 +88654,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
 
             cloneData: null,
-
             image: '',
             courses: __WEBPACK_IMPORTED_MODULE_1__Course_courses__["a" /* courses */],
             categories: __WEBPACK_IMPORTED_MODULE_2__state_view__["a" /* category */],
@@ -88728,12 +88727,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         resetForm: function resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        handleClose: function handleClose(done) {
+        handleClose: function handleClose() {
             var vm = this;
             if (vm.checkedEdit()) {
                 vm.closeData();
             } else {
-                vm.$confirm('Are you sure to close this dialog without saving it?', 'Warning', {
+                vm.$confirm('Are you sure to close this dialog without saving it?', 'Info', {
                     confirmButtonText: 'Save',
                     cancelButtonText: 'Cancel',
                     type: 'info'
@@ -88741,7 +88740,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     vm.postData('validateForm');
                 }).catch(function () {
                     var edit = vm.dialogFormVisible.editData;
-                    console.log(edit.category.id == vm.cloneData.category.id);
                     if (edit.category.id != vm.cloneData.category.id) {
                         edit.category.id = vm.cloneData.category.id;
                     }
@@ -88750,7 +88748,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
 
                     if (edit.name != vm.cloneData.name) {
-                        console.log('name', vm.cloneData.name);
                         edit.name = vm.cloneData.name;
                     }
                     if (edit.schoolId != vm.cloneData.schoolId) {
@@ -88771,6 +88768,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var vm = _this.dialogFormVisible.editData;
             _this.$refs[formName].validate(function (valid) {
                 if (valid) {
+                    this.cloneData = _.cloneDeep(this.dialogFormVisible.editData);
                     Object(__WEBPACK_IMPORTED_MODULE_0__state__["b" /* dataUpdate */])(vm, _this.$notify({
                         title: 'Success',
                         message: 'Edit Successfully',
@@ -89014,7 +89012,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "btn btn-primary",
     on: {
       "click": function($event) {
-        _vm.postData('validateForm')
+        _vm.handleClose()
       }
     }
   }, [_vm._v(_vm._s('Edit ' + _vm.dialogFormVisible.editData.name) + "\n\n ")]), _vm._v(" "), _c('el-button', {
