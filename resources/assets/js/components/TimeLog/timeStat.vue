@@ -16,12 +16,6 @@
                     <el-tab-pane name="Line Chart" label="Bar Chart">
                         <time-line v-if="selectedPaned.tabs == 'Line Chart'" type="bar" :dataSet="sumValue"></time-line>
                     </el-tab-pane>
-                    <el-tab-pane label="Radar Chart">
-
-                    </el-tab-pane>
-                    <el-tab-pane label="Polar Area Chart">Task</el-tab-pane>
-                    <el-tab-pane label="Bubble Chart">Task</el-tab-pane>
-                    <el-tab-pane label="Scatter Chart">Task</el-tab-pane>
                 </el-tabs>
 
             </el-col>
