@@ -18,11 +18,11 @@ class CreatePhotosTable extends Migration
             $table->string('file');
             $table->timestamps();
         });
-        Schema::create('photo_visitor',function (Blueprint $table){
+        Schema::create('photo_visitor', function (Blueprint $table) {
             $table->unsignedInteger('visitor_id');
-            $table->foreign('visitor_id')->references('id')->on('visitors');
+            $table->foreign('visitor_id')->references('id')->on('visitors')->onDelete('cascade');
             $table->unsignedInteger('photo_id');
-            $table->foreign('photo_id')->references('id')->on('photos');
+            $table->foreign('photo_id')->references('id')->on('photos')->onDelete('cascade');
         });
     }
 

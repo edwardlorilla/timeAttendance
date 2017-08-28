@@ -1,6 +1,7 @@
 <template>
-    <el-card class="box-card">
-        <div slot="header" class="clearfix">
+    <div>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
             <span style="line-height: 36px;"><el-date-picker
                     v-model="dateFilter"
                     type="daterange"
@@ -28,21 +29,22 @@
                   </el-select>
             </span>
 
-            <el-button style="float: right;" type="primary">Operation button</el-button>
-        </div>
-        <cross-tabs
-                :data="filteredData"
-                :rows="['Category']"
-                :cols="[ 'Year']"
-                :aggregator="aggregator"
-                :cellWidth="200"
-                :height="100 * 4"
-                :measure="measure"
-        >
+                <el-button style="float: right;" type="primary">Operation button</el-button>
+            </div>
+            <cross-tabs
+                    :data="filteredData"
+                    :rows="['Category']"
+                    :cols="[ 'Year']"
+                    :aggregator="aggregator"
+                    :cellWidth="200"
+                    :height="100 * 4"
+                    :measure="measure"
+            >
 
-        </cross-tabs>
-
-    </el-card>
+            </cross-tabs>
+        </el-card>
+        <time-stat style="margin-top: 2vh" :dataValue="filteredData"></time-stat>
+    </div>
 </template>
 
 <script>
@@ -50,7 +52,7 @@
     export default {
         data(){
             return {
-                measure:'Duration',
+                measure: 'Duration',
                 aggregator: 'count',
                 data: eventlogs,
                 dateFilter: []

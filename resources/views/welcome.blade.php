@@ -10,6 +10,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}"/>
     <title>Time Management</title>
+
 </head>
 <body>
 <div id="app">

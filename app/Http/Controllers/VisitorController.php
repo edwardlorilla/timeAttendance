@@ -18,7 +18,7 @@ class VisitorController extends Controller
     public function index()
     {
         $visitors = Cache::rememberForever('visitor:all', function () {
-            return Visitor::with('category', 'gender', 'course', 'photos')->orderBy('updated_at', 'desc')->get();
+            return Visitor::with('category', 'gender', 'course', 'photos', 'photo')->orderBy('updated_at', 'desc')->get();
         });
         return response()->json($visitors);
     }
@@ -64,13 +64,14 @@ class VisitorController extends Controller
             'course_id' => $request->course_id,
             'disabled' => 0,
             'schoolId' => $request->schoolId,
+            'photo_id' => $photo->id
         ]);
         $visitor->save();
         if ($photo->id) {
             $visitor->photos()->attach($photo->id);
         }
         Cache::forget('visitor:all');
-        return response()->json(['data' => $visitor, 'success' => 'Success storing newly created visitor'], 200);
+        return response()->json(['data' => $visitor, 'success' => 'Success storing newly created visitor', 'photo_file' => $photo->file], 200);
     }
 
     /**
@@ -104,7 +105,6 @@ class VisitorController extends Controller
      */
     public function update(Request $request, Visitor $visitor)
     {
-
         $visitor->update(array_diff_assoc($request->all(), $visitor->toArray()));
 //        $visitor->name = $request->name;
 //        $visitor->year = $request->year;
@@ -145,9 +145,24 @@ class VisitorController extends Controller
 
         $visitor = Visitor::where('id', $request->id)->first();
         $visitor->photos()->attach($photo->id);
+        Cache::forget('visitor:all');
 
-
-        return response()->json(['photo_name' => $name]);
+        return response()->json(['photo_name' => $name, 'photo_id' => $photo->id]);
 
     }
+
+    public function postPhoto(Request $request, $visitor)
+    {
+        $photo = new Photo();
+        if($file = $request->file('file')){
+            $name = time() . $file->getClientOriginalName();
+            $file->move('images', $name);
+            $photo = $photo->create(['file' => $name]);
+        }
+        $visitorPhoto = Visitor::where('id', $visitor)->first();
+        $visitorPhoto->photos()->attach($photo->id);
+        Cache::forget('visitor:all');
+        return response()->json(['photo_name' => $photo->file, 'photo_id' => $photo->id]);
+    }
+    
 }

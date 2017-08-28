@@ -16,7 +16,7 @@ class TimeController extends Controller
     public function index()
     {
         $time = Cache::rememberForever('times:all', function () {
-            return Time::with('visitor.category')->orderBy('updated_at', 'desc')->get();
+            return Time::with('visitor.category', 'visitor.photo')->orderBy('updated_at', 'desc')->get();
         });
         return response()->json($time);
     }

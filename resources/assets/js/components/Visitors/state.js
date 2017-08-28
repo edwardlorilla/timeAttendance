@@ -4,8 +4,8 @@
 function fetch(urlFetch) {
 
     axios.get(urlFetch).then(response => data.data = _.map(response.data, function (num) {
-
-        var pick = _.pick(num, 'id', 'photos', 'name', 'category','gender', 'year', 'category_id', 'schoolId', 'course', 'disabled');
+        var photo_obj = {file: null, id: null};
+        var pick = _.pick(num, 'id', 'photos','photo', 'name', 'category','gender', 'year', 'category_id', 'schoolId', 'course', 'disabled');
         var object = {
             id: pick.id,
             name: pick.name,
@@ -15,7 +15,8 @@ function fetch(urlFetch) {
             schoolId: pick.schoolId ? pick.schoolId : '',
             course: pick.course ? pick.course : '',
             disabled: pick.disabled != 0 ? true : false,
-            photos: _.isEmpty(pick.photos) ? '' : (pick.photos[0] ? pick.photos[0].file : '' )
+            photos: _.isEmpty(pick.photos) ? '' : pick.photos,
+            photo: _.isEmpty(pick.photo) ? photo_obj  : (pick.photo ? pick.photo : photo_obj )
         };
         return object
     }))
@@ -35,7 +36,7 @@ function findId(id) {
 
 
 function dataUpdate(request, message) {
-
+    console.log(request)
     var editData = request;
     var user = _.findIndex(data.data, {id: request.id});
 
@@ -49,15 +50,15 @@ function dataUpdate(request, message) {
         year: editData.year,
         course_id: editData.course.id,
         disabled: 0,
-        gender_id: editData.gender
+        gender_id: editData.gender,
+        photo_id: editData.photo.id
     })
 
         .then(function (response) {
+            console.log(response)
             if (response) {
                 message
             }
-
-
         })
         .catch(function (error) {
 
@@ -110,7 +111,6 @@ export var isEdit = {
 function isToggle() {
     var vm = isEdit;
     vm.isToggle = !vm.isToggle
-    return vm.isToggle
 }
 
 function setEditData(row) {

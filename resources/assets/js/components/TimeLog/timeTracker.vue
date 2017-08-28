@@ -109,9 +109,9 @@
                     visitor: {
                         name: userDetail ? userDetail.name : '',
                         schoolId: userDetail ? userDetail.schoolId : '',
-                        year: userDetail ? userDetail.year : ''
+                        year: userDetail ? userDetail.year : '',
+                        photo: userDetail ? userDetail.photo : '' ,
                     },
-
 
                     LocaleDate: this.$moment().format('YYYY-MM-DD'),
                     LocaleStartTime: new Date().getTime() - 1000,
@@ -135,7 +135,7 @@
                             disabled: 1
                         })
                                 .then(function (response) {
-
+                                    console.log(response)
                                     addEvent(response.data.data)
                                     addTimeId(response.data.data.id, addTime.visitor_id)
                                 })

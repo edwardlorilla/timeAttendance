@@ -26,7 +26,7 @@ class AddGenderIdToVisitorsTable extends Migration
     public function down()
     {
         Schema::table('visitors', function (Blueprint $table) {
-            $table->dropForeign('gender_id');
+            $table->dropForeign(['gender_id']);
         });
     }
 }

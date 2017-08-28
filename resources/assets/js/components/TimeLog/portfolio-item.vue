@@ -5,7 +5,7 @@
 
 
             <a href="#"><img class="card-img-top" width="200px"
-                             src="http://placehold.it/700x400" alt=""></a>
+                             :src="addTd.visitor.photo ? '/images/' +  addTd.visitor.photo.file : 'http://placehold.it/700x400'" alt=""></a>
             <div class="card-body">
                 <h4 class="card-title">
                     <a href="#">{{addTd.visitor.name}}</a>

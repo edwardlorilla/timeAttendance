@@ -149,14 +149,14 @@
 
             getData(){
                 return _.map(this.data.data, function (num) {
-                    var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos')
+                    var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos', 'photo')
                     var object = {
                         id: pick.id,
                         name: pick.name,
                         year: pick.year,
                         category: pick.category ? pick.category.name : '',
                         course: pick.course ? pick.course.course : '',
-                        avatar: !_.isEmpty(pick.photos) ?  '/images/' + pick.photos : ''
+                        avatar: !_.isEmpty(pick.photo) ?  '/images/' + pick.photo.file : {file: null, id: null}
                     }
                     return object
                 })

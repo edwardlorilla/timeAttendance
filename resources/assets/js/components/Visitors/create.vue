@@ -161,12 +161,11 @@
                     category_id: addData.category.id,
                     year: addData.year,
                     schoolId: addData.schoolId,
-                    photo_raw: vm.photo,
+                    photo_raw: vm.image,
                     gender_id: addData.gender
                 })
                         .then(function (response) {
-                            vm.image = ''
-                            console.log({course: addData.course.course, id: addData.category.id})
+
                             DATA.data.unshift({
                                 id: response.data.data.id,
                                 schoolId: addData.schoolId,
@@ -174,8 +173,8 @@
                                 category: {name: addData.category.name, id: addData.category.id},
                                 course: {course: addData.course.course, id: addData.category.id},
                                 year: addData.year,
-                                gender:addData.gender
-
+                                gender:addData.gender,
+                                photo: {file: response.data ? response.data.photo_file: '' }
                             })
                             vm.$notify({
                                 title: 'Success',

@@ -4,81 +4,43 @@
                :before-close="handleClose"
                size="large"
     >
-        <el-row :gutter="20">
-            <el-col :span="16">
-                <el-form ref="validateForm" :model="dialogFormVisible.editData" :rules="rules" label-width="120px">
-
-                    <el-form-item label="Name:" prop="name">
-                        <el-input v-model="dialogFormVisible.editData.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Gender"
-                                  prop="gender"
-                                  :rules="[
-                              { required: true, message: 'The gender field is required.', trigger: 'blur' },
-                            ]"
-                                  :label-width="formLabelWidth">
-                        <el-radio class="radio" v-model="dialogFormVisible.editData.gender" label="1">Male</el-radio>
-                        <el-radio class="radio" v-model="dialogFormVisible.editData.gender" label="0">Female</el-radio>
-                    </el-form-item>
-                    <el-form-item v-if="isShow" label="School ID:" prop="schoolId">
-                        <el-input v-model="dialogFormVisible.editData.schoolId"></el-input>
-                    </el-form-item>
-
-                    <el-form-item v-if="isShow" label="Course" required>
-                        <el-select v-model="dialogFormVisible.editData.course.id" placeholder="Please select a Course">
-                            <el-option v-for="(course, index) in courses.all" :key="index"
-                                       :label="course.course" :value='course.id'></el-option>
-
-                        </el-select>
-                    </el-form-item>
-
-                    <el-form-item label="Category" required>
-                        <el-select v-model="dialogFormVisible.editData.category.id" id="Category">
-                            <el-option v-for="category in categories.categories" :key="category.id"
-                                       :label="category.name | ucFirstAllWords" :value='category.id'></el-option>
-                        </el-select>
-
-                    </el-form-item>
-
-                    <el-form-item v-if="isShow" label="Year" required>
-                        <el-select id="year" v-model="dialogFormVisible.editData.year"
-                                   placeholder="Please select a year">
-                            <el-option label="1st year" value="1"></el-option>
-                            <el-option label="2nd year" value="2"></el-option>
-                            <el-option label="3rd year" value="3"></el-option>
-                            <el-option label="4th year" value="4"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-            </el-col>
-            <el-col :span="8">
-                <picture-input
-                        :prefill="dialogFormVisible.editData.photos ? '/images/' +dialogFormVisible.editData.photos : ''"
-
-                        ref="pictureInput"
-                        @change="onChanged"
-                        @remove="onRemoved"
-                        :width="500"
-                        :removable="true"
-                        removeButtonClass="ui red button"
-                        :height="500"
-                        accept="image/jpeg, image/png, image/gif"
-                        buttonClass="ui button primary"
-                        :customStrings="{
+        <el-tabs v-model="activeName">
+            <el-tab-pane label="User Edit"  name="first">
+                <el-row v-if="activeName === 'first'" :gutter="20">
+                    <el-col :span="16">
+                        <form-edit :formLabelWidth="formLabelWidth" :rules="rules" :dialog="dialogFormVisible.editData"
+                                   :isShow="isShow" :courses="courses.all"
+                                   :categories="categories.categories"></form-edit>
+                    </el-col>
+                    <el-col :span="8">
+                        <picture-input
+                                :prefill="dialogFormVisible.editData.photo.file ? '/images/' +dialogFormVisible.editData.photo.file : ''"
+                                ref="pictureInput"
+                                @change="onChanged"
+                                @remove="onRemoved"
+                                :width="500"
+                                :removable="true"
+                                removeButtonClass="ui red button"
+                                :height="500"
+                                accept="image/jpeg, image/png, image/gif"
+                                buttonClass="ui button primary"
+                                :customStrings="{
   upload: '<h1>Upload it!</h1>',
   drag: 'Drag and drop your image here'}">
 
-                </picture-input>
+                        </picture-input>
+                        <button @click.prevent="attemptUpload" v-bind:class="{ disabled: !image }">
+                            Upload
+                        </button>
+                    </el-col>
+                </el-row>
+            </el-tab-pane>
+            <el-tab-pane label="Gallery" name="second">
+                <user-gallery v-if="activeName === 'second'" :userId="dialogFormVisible.editData.id" :photos_url="dialogFormVisible.editData.photos"></user-gallery>
+            </el-tab-pane>
 
-                <!--<img v-else @click="onRemoved" width="500" :src="'/images/' +dialogFormVisible.editData.photos" :alt="dialogFormVisible.editData.photos">
-                <button v-if="dialogFormVisible.editData.photos" @click="onChanged">Change Photo</button>
-                <button v-if="dialogFormVisible.editData.photos" @click="onRemoved">Remove Photo</button>-->
-                <button @click.prevent="attemptUpload" v-bind:class="{ disabled: !image }">
-                    Upload
-                </button>
-            </el-col>
-        </el-row>
-        </el-row>
+        </el-tabs>
+
          <span slot="footer" class="dialog-footer">
    <button class="btn btn-primary" @click="handleClose()">{{'Edit ' + dialogFormVisible.editData.name}}
 
@@ -96,7 +58,7 @@
 
         data(){
             return {
-
+                activeName:'first',
                 cloneData: null,
                 image: '',
                 courses: courses,
@@ -117,6 +79,7 @@
             }
         },
         computed: {
+
             dialogFormVisibles(){
                 return this.dialogFormVisible ? this.dialogFormVisible.editData : ''
             },
@@ -143,18 +106,8 @@
             isReady(){
                 return !_.isEmpty(this.dialogFormVisibles.category.id && this.dialogFormVisibles.course.id && this.dialogFormVisibles.name && this.dialogFormVisibles.schoolId && this.dialogFormVisibles.year)
             },
-
-
         },
-        filters: {
-            ucFirstAllWords(str)
-            {
-                return _.upperFirst(str);
-            },
-            toString(int){
-                return _.toString(int)
-            }
-        },
+
         mounted() {
             fetchCategories('api/categories');
             fetchCourses('api/courses');
@@ -165,6 +118,7 @@
                 var vm = this
                 return !_.isEmpty(vm.cloneData) ? vm.cloneData.category.id === vm.dialogFormVisibles.category.id &&
                 vm.cloneData.course.id === vm.dialogFormVisibles.course.id &&
+                vm.cloneData.photo.id === vm.dialogFormVisibles.photo.id &&
                 vm.cloneData.name === vm.dialogFormVisibles.name &&
                 vm.cloneData.schoolId === vm.dialogFormVisibles.schoolId &&
                 vm.cloneData.year === vm.dialogFormVisibles.year : ''
@@ -174,7 +128,9 @@
                 var _this = this
                 FormDataUpdate('/api/editPhoto', {avatar: _this.image, id: vm.id})
                         .then(function (response) {
-                            _this.dialogFormVisible.editData.photos = response.data.photo_name;
+                            _this.dialogFormVisible.editData.photo.file = response.data.photo_name;
+                            _this.dialogFormVisible.editData.photo.id = response.data.photo_id;
+
                         })
                         .catch(function (err) {
                             console.error(err);
@@ -194,7 +150,7 @@
                         type: 'info'
                     })
                             .then(function () {
-                                vm.postData('validateForm')
+                                vm.postData()
                             })
                             .catch(function () {
                                 var edit = vm.dialogFormVisible.editData
@@ -212,7 +168,11 @@
                                     edit.schoolId = vm.cloneData.schoolId
                                 }
                                 if (edit.year != vm.cloneData.year) {
-                                    edit.year = vm.year
+                                    edit.year = vm.cloneData.year
+                                }
+                                if (edit.photo.id != vm.cloneData.photo.id) {
+                                    edit.photo.id = vm.cloneData.photo.id
+                                    edit.photo.file = vm.cloneData.photo.file
                                 }
                                 vm.closeData()
                             });
@@ -221,23 +181,16 @@
             closeData(){
                 isToggle()
             },
-            postData(formName){
+            postData(){
                 var _this = this
                 var vm = _this.dialogFormVisible.editData
-                _this.$refs[formName].validate(function (valid) {
-                    if (valid) {
-                        this.cloneData = _.cloneDeep(this.dialogFormVisible.editData)
-                        dataUpdate(vm, _this.$notify({
-                            title: 'Success',
-                            message: 'Edit Successfully',
-                            type: 'success'
-                        }))
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-
+                this.cloneData = _.cloneDeep(this.dialogFormVisible.editData)
+                console.log('postData', _this.dialogFormVisible.editData)
+                dataUpdate(vm, _this.$notify({
+                    title: 'Success',
+                    message: 'Edit Successfully',
+                    type: 'success'
+                }))
             },
             onChanged() {
                 console.log("New picture loaded");
@@ -249,6 +202,11 @@
             },
             onRemoved() {
                 this.image = '';
+                var edit = this.dialogFormVisible.editData
+                if (edit.photo.id) {
+                    edit.photo.file = '';
+                    edit.photo.id = '';
+                }
             },
         }
     }
