@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <span style="line-height: 36px;">Pie Chart</span>
+            <span style="line-height: 36px;">{{selectedPaned.tabs}}</span>
         </div>
 
         <el-row :gutter="20">

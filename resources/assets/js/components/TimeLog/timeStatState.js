@@ -2,7 +2,7 @@
  * Created by Lorilla on 29/08/2017.
  */
 export var view ={
-    tabs: 'Pie Chart'
+    tabs: 'Line Chart'
 }
 function change_view(state) {
     view.tabs = state

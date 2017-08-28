@@ -94656,12 +94656,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -94698,7 +94692,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * Created by Lorilla on 29/08/2017.
  */
 var view = {
-    tabs: 'Pie Chart'
+    tabs: 'Line Chart'
 };
 function change_view(state) {
     view.tabs = state;
@@ -94719,7 +94713,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticStyle: {
       "line-height": "36px"
     }
-  }, [_vm._v("Pie Chart")])]), _vm._v(" "), _c('el-row', {
+  }, [_vm._v(_vm._s(_vm.selectedPaned.tabs))])]), _vm._v(" "), _c('el-row', {
     attrs: {
       "gutter": 20
     }
@@ -94766,23 +94760,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "type": "bar",
       "dataSet": _vm.sumValue
     }
-  }) : _vm._e()], 1), _vm._v(" "), _c('el-tab-pane', {
-    attrs: {
-      "label": "Radar Chart"
-    }
-  }), _vm._v(" "), _c('el-tab-pane', {
-    attrs: {
-      "label": "Polar Area Chart"
-    }
-  }, [_vm._v("Task")]), _vm._v(" "), _c('el-tab-pane', {
-    attrs: {
-      "label": "Bubble Chart"
-    }
-  }, [_vm._v("Task")]), _vm._v(" "), _c('el-tab-pane', {
-    attrs: {
-      "label": "Scatter Chart"
-    }
-  }, [_vm._v("Task")])], 1)], 1), _vm._v(" "), _c('el-col', {
+  }) : _vm._e()], 1)], 1)], 1), _vm._v(" "), _c('el-col', {
     attrs: {
       "span": 8
     }
