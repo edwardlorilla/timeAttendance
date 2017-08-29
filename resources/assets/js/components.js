@@ -15,6 +15,8 @@ import timeStat from  './components/TimeLog/timeStat.vue'
 import timeBar from  './components/TimeLog/timePie'
 import timeLine from  './components/TimeLog/timeLine'
 import timeDoughnut from  './components/TimeLog/timeDoughnut'
+import lineTime from  './components/TimeLog/LineChart'
+import attendanceChart from  './components/TimeLog/AttendaceChart.vue'
 import Crosstab from 'vue-crosstab'
 import pictureUpload from 'vue-picture-input'
 import { Bar, Pie } from 'vue-chartjs'
@@ -93,6 +95,16 @@ Vue.component("time-line", function(resolve){
 Vue.component("time-doughnut", function(resolve){
     setTimeout(function(){
         resolve(timeDoughnut)
+    }, 100)
+});
+Vue.component("line-time", function(resolve){
+    setTimeout(function(){
+        resolve(lineTime)
+    }, 100)
+});
+Vue.component("attendance-chart", function(resolve){
+    setTimeout(function(){
+        resolve(attendanceChart)
     }, 100)
 });
 

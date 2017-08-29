@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <span style="line-height: 36px;">{{selectedPaned.tabs}}</span>
+            <span style="line-height: 36px;">{{selectedPaned.tabs}} # of Time Spends</span>
         </div>
 
         <el-row :gutter="20">
@@ -13,8 +13,11 @@
                     <el-tab-pane name="Doughnut Chart" label="Doughnut Chart">
                         <time-doughnut v-if="selectedPaned.tabs == 'Doughnut Chart'" :dataSet="sumValue"></time-doughnut>
                     </el-tab-pane>
-                    <el-tab-pane name="Line Chart" label="Bar Chart">
-                        <time-line v-if="selectedPaned.tabs == 'Line Chart'" type="bar" :dataSet="sumValue"></time-line>
+                    <el-tab-pane name="Bar Chart" label="Bar Chart">
+                        <time-line v-if="selectedPaned.tabs == 'Bar Chart'" type="bar" :dataSet="sumValue"></time-line>
+                    </el-tab-pane>
+                    <el-tab-pane name="Line Chart" label="Line Chart">
+                        <line-time v-if="selectedPaned.tabs == 'Line Chart'" :label="lineLabel" :dataSet="lineValue"></line-time>
                     </el-tab-pane>
                 </el-tabs>
 
@@ -35,6 +38,7 @@
                     </el-table-column>
                 </el-table>
             </el-col>
+
         </el-row>
 
 
@@ -47,14 +51,33 @@
         props:['dataValue'],
         data(){
             return{
-                selectedPaned: view
+                selectedPaned: view,
+                lineLabel: [],
+                lineData:[]
             }
         },
         computed:{
+            lineValue(){
+                var vm = this
+                var countBy =   _.countBy(vm.dataValue, function(o){
+                    return vm.$moment(o.LocalDate).format('MMMM');
+                });
+                var data1 = vm.lineLabel;
+                var data2 = vm.lineData;
 
+                for (var key in countBy) {
+                    if (countBy.hasOwnProperty(key)) {
+                        data1.push(key);
+                        data2.push(countBy[key]);
+                    }
+                }
+
+                return data2
+
+            },
             sumValue(){
                 var vm = this
-                return _(vm.dataValue).map('Year').uniq().map(function (key) {
+                return  _(vm.dataValue).map('Year').uniq().map(function (key) {
                     var duration = vm.$moment.duration(_(vm.dataValue).filter({ Year: key }).sumBy('Duration'), 'seconds');
                     return {
                         key: key,
@@ -62,7 +85,8 @@
                         timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
                     };
                 }).value();
-            }
+            },
+
         }
     }
 </script>

@@ -43,6 +43,7 @@
 
             </cross-tabs>
         </el-card>
+        <attendance-chart style="margin-top: 2vh" :dataValue="filteredData"></attendance-chart>
         <time-stat style="margin-top: 2vh" :dataValue="filteredData"></time-stat>
     </div>
 </template>
@@ -99,7 +100,10 @@
                         Category: _.toUpper(data.category),
                         Duration: vm.$moment.duration(data.duration, "HH:mm:ss").asSeconds(),
                         Year: _.toUpper(data.year),
-                        LocalDate: data.LocalDate
+                        LocalDate: data.LocalDate,
+                        course: !_.isEmpty(data.course) ? data.course : null,
+                        name: data.visitor
+
                     }
                     return obj
                 }), 'Year')

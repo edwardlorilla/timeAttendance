@@ -3,7 +3,7 @@
  */
 function timeFetch(urlFetch) {
     axios.get(urlFetch).then(response => eventlogs.all = _.map(response.data, function (num) {
-        var pick = _.pick(num, 'id', 'visitor', 'LocaleDate', 'tempStartTime', 'LocaleEndTime', 'duration', 'year', 'LocaleDate', 'disabled')
+        var pick = _.pick(num, 'id', 'visitor', 'LocaleDate', 'tempStartTime', 'LocaleEndTime', 'duration', 'year', 'LocaleDate', 'disabled', 'course')
         var object = {
             id: pick.id,
             timeIn: pick.tempStartTime,
@@ -14,7 +14,8 @@ function timeFetch(urlFetch) {
             schoolId: !_.isEmpty(pick.visitor) ? pick.visitor.schoolId : '',
             LocalDate: pick.LocaleDate,
             duration: _.isEmpty(pick.duration) ? 'not yet finish' : pick.duration,
-            disabled: 0 ? false : true
+            disabled: 0 ? false : true,
+            course: pick.visitor.course ? pick.visitor.course.course : null
         }
         return object
     }))
