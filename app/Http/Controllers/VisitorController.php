@@ -18,7 +18,7 @@ class VisitorController extends Controller
     public function index()
     {
         $visitors = Cache::rememberForever('visitor:all', function () {
-            return Visitor::with('category', 'gender', 'course', 'photos', 'photo')->orderBy('updated_at', 'desc')->get();
+            return Visitor::with('category', 'gender', 'course', 'photos', 'photo', 'time')->orderBy('updated_at', 'desc')->get();
         });
         return response()->json($visitors);
     }

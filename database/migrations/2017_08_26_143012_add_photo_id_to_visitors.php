@@ -16,7 +16,8 @@ class AddPhotoIdToVisitors extends Migration
         Schema::table('visitors', function (Blueprint $table) {
             
             $table->foreign('photo_id')->references('id')->on('photos');
-
+            $table->foreign('time_id')->references('id')->on('times');
+            
         });
     }
 
@@ -28,7 +29,7 @@ class AddPhotoIdToVisitors extends Migration
     public function down()
     {
         Schema::table('visitors', function (Blueprint $table) {
-            $table->dropForeign(['photo_id']);
-        });
+            $table->dropForeign(['photo_id', 'time_id']);
+        }); 
     }
 }

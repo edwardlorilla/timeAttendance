@@ -20,8 +20,12 @@ function addEndTime(request){
     timelogs.all[found].LocaleEndTime = utcDate();
     _.setWith(timelogs.all[found], 'autoUpdate',0 );
 }
-
+function findTimeId(id){
+    var found = _.findIndex(timelogs.all, {id: id});
+    console.log(id)
+    return timelogs.all[found]
+}
 export var timelogs = {
     all: []
 }
-export {timeFetch,addEndTime,addTimeId}
+export {findTimeId,  timeFetch,addEndTime,addTimeId}

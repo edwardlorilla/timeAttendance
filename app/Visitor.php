@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Visitor extends Model
 {
     protected $fillable = [
-        'name', 'year','schoolId', 'category_id', 'course_id','gender_id', 'disabled', 'photo_id'
+        'name', 'year','schoolId', 'category_id', 'course_id','gender_id', 'disabled', 'photo_id', 'time_id'
     ];
     public function category()
     {
@@ -33,5 +33,8 @@ class Visitor extends Model
     public function photo()
     {
         return $this->belongsTo(Photo::class);
+    }public function time()
+    {
+        return $this->belongsTo(Time::class);
     }
 }

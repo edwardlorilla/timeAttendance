@@ -19,6 +19,7 @@ class CreateVisitorsTable extends Migration
             $table->unsignedInteger('course_id')->index()->nullable();
             $table->unsignedInteger('gender_id')->index()->nullable();
             $table->unsignedInteger('photo_id')->index()->nullable();
+            $table->unsignedInteger('time_id')->index()->nullable();
 
             $table->foreign('category_id')->references('id')->on('categories');
             $table->boolean('disabled')->default(false);

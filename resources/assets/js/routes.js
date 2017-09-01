@@ -1,16 +1,22 @@
 /**
  * Created by Lorilla on 09/08/2017.
  */
-const Login = resolve => require(['./components/Auth/_Login.vue'], resolve);
 const Visitor = resolve => require(['./components/Visitors/index.vue'], resolve);
 const TimeLog = resolve => require(['./components/TimeLog/index.vue'], resolve);
+const ViewProfile = resolve => require(['./components/Auth/viewProfile.vue'], resolve);
+const LoginUser = resolve => require(['./components/Auth/loginUser.vue'], resolve);
 /*const visitorCreate = resolve => require(['./components/Visitors/create.vue'], resolve);
 const visitorEdit = resolve => require(['./components/Visitors/edit.vue'], resolve);*/
 
 export default [
     {
-        path: '/',
-        component: Login,
+        path: '/view-profile',
+        component: ViewProfile,
+        name: 'view-profile',
+    },
+    {
+        path: '/login-user',
+        component: LoginUser,
         name: 'login',
     },
     {

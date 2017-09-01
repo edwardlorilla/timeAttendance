@@ -16,7 +16,8 @@ function fetch(urlFetch) {
             course: pick.course ? pick.course : '',
             disabled: pick.disabled != 0 ? true : false,
             photos: _.isEmpty(pick.photos) ? '' : pick.photos,
-            photo: _.isEmpty(pick.photo) ? photo_obj  : (pick.photo ? pick.photo : photo_obj )
+            photo: _.isEmpty(pick.photo) ? photo_obj  : (pick.photo ? pick.photo : photo_obj ),
+            time_id: _.isEmpty(pick.time) ? null  : pick.time
         };
         return object
     }))
@@ -26,6 +27,12 @@ function findIndex(id) {
     var user = _.findIndex(data.data, {id: id});
     found.user = data.data[user];
 
+}
+function findStudent(id) {
+
+    console.log(id)
+    var user = _.findIndex(data.data, {schoolId: id});
+    return data.data[user]
 }
 
 
@@ -76,7 +83,8 @@ function disableSelected(request, change) {
     data.data[found].disabled = change != 0 ? true : false;
 
     axios.patch('/api/visitors/' + ID, {
-        disabled: change
+        disabled: change,
+        time_id: request.time_id
     })
         .then(function (response) {
             console.log(response);
@@ -122,7 +130,7 @@ function setEditData(row) {
 
 
 export  {
-    setEditData, isToggle, fetch, findIndex, dataUpdate, deleteData, disableSelected, findId,
+    setEditData, isToggle, fetch, findIndex, dataUpdate, deleteData, disableSelected, findId,findStudent
 }
 
 

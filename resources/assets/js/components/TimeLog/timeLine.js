@@ -24,7 +24,6 @@ export default ({
                 labels: this.labelPluck,
                 datasets: [
                     {
-                        label: "# of Seconds",
                         data: this.valPluck,
                         backgroundColor: [
                             "rgba(255, 99, 132, 0.6)",

@@ -1,14 +1,14 @@
 webpackJsonp([1],{
 
-/***/ 622:
+/***/ 627:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(6)(
+var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(627),
+  __webpack_require__(631),
   /* template */
-  __webpack_require__(628),
+  __webpack_require__(632),
   /* styles */
   null,
   /* scopeId */
@@ -41,12 +41,14 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 627:
+/***/ 631:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_state__ = __webpack_require__(263);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_state__ = __webpack_require__(264);
+//
+//
 //
 //
 //
@@ -75,11 +77,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 628:
+/***/ 632:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('el-tabs', {
+  return _c('div', {
+    staticClass: "container-fluid"
+  }, [_c('el-tabs', {
     attrs: {
       "type": "border-card"
     },
@@ -105,7 +109,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "name": "event-report",
       "label": "Event Report"
     }
-  }, [(_vm.selectedPaned.tabs == 'event-report') ? _c('event-report') : _vm._e()], 1)], 1)
+  }, [(_vm.selectedPaned.tabs == 'event-report') ? _c('event-report') : _vm._e()], 1)], 1)], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

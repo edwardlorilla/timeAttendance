@@ -36,8 +36,11 @@
         <!-- List group -->
         <div class="row">
 
-            <portfolio-item v-for="(addTd, index) in filteredData" :finishRow="finishRow"
-                            :loading="loading" :autoUpdate="autoUpdate" :currentLang="currentLang"
+            <portfolio-item v-for="(addTd, index) in filteredData"
+                            :finishRow="finishRow"
+                            :loading="loading"
+                            :autoUpdate="autoUpdate"
+                            :currentLang="currentLang"
                             :key="index" :addTd="addTd">
 
             </portfolio-item>

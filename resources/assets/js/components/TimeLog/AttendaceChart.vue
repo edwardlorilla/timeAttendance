@@ -4,39 +4,78 @@
             <span style="line-height: 36px;">Attendance Chart</span>
         </div>
         <el-row class="tac" :gutter="20">
-            <el-col :span="8">
+            <el-col :span="4">
                 <el-menu @select="selectedMenu" default-active="0" class="el-menu-vertical-demo">
                     <el-menu-item v-for="(course, index) in groupBy" :key="index" :index="index | toString">
                         {{course.course}}
                     </el-menu-item>
                 </el-menu>
             </el-col>
-            <el-col :span="16">
-                <el-tabs type="border-card" v-if="selectedCourse"  >
-                    <el-tab-pane :label="selectedCourse.course" >
+            <el-col :span="12">
+                <el-tabs v-model="selectedPaned.tabs" type="border-card" v-if="selectedCourse">
+                    <el-tab-pane name="count_log" :label="selectedCourse.course">
                         <el-table
-                                :data="selectedCourse.name"
+                                v-if="selectedPaned.tabs == 'count_log'"
+                                :data="tableBy"
                                 height="250"
                                 border
                                 style="width: 100%">
                             <el-table-column
-                                    prop="name"
+                                    prop="key"
                                     label="Name">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="timeValue"
+                                    label="Time Spend">
                             </el-table-column>
                         </el-table>
                     </el-tab-pane>
+                    <el-tab-pane name="Pie Chart" label="Pie Chart">
+                        <time-pie v-if="selectedPaned.tabs == 'Pie Chart'" :dataSet="sumValue"></time-pie>
+                    </el-tab-pane>
+                    <el-tab-pane name="Doughnut Chart" label="Doughnut Chart">
+                        <time-doughnut v-if="selectedPaned.tabs == 'Doughnut Chart'"
+                                       :dataSet="sumValue"></time-doughnut>
+                    </el-tab-pane>
+                    <el-tab-pane name="Bar Chart" label="Bar Chart">
+                        <time-line v-if="selectedPaned.tabs == 'Bar Chart'" type="bar" :dataSet="sumValue"></time-line>
+                    </el-tab-pane>
+                    <el-tab-pane name="Line Chart" label="Line Chart">
+                        <line-time v-if="selectedPaned.tabs == 'Line Chart'" :label="lineLabel"
+                                   :dataSet="lineData"></line-time>
+                    </el-tab-pane>
                 </el-tabs>
+            </el-col>
+            <el-col :span="8">
+                <el-table
+                        :data="lineValue"
+                        style="width: 100%"
+                >
+                    <el-table-column
+                            prop="month"
+                            label="Month"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="count"
+                            label="Count of Students">
+                    </el-table-column>
+                </el-table>
             </el-col>
         </el-row>
     </el-card>
 </template>
 
 <script>
+    import {view} from './attendanceState'
     export default {
         props: ['dataValue'],
         data(){
             return {
-                selected: 0
+                selected: 0,
+                selectedPaned: view,
+                lineLabel: [],
+                lineData: []
             }
         },
         filters: {
@@ -46,6 +85,45 @@
             }
         },
         computed: {
+            lineValue(){
+                var vm = this
+                if (vm.selectedCourse) {
+                    var countBy = _.countBy(vm.selectedCourse.name, function (o) {
+                        return vm.$moment(o.LocalDate).format('MMMM');
+                    });
+                    var data1 = vm.lineLabel;
+                    var data2 = vm.lineData;
+                    var array = [];
+                    for (var key in countBy) {
+
+                        if (countBy.hasOwnProperty(key)) {
+                            array.push({month: key, count: countBy[key]})
+                        }
+                        if (countBy.hasOwnProperty(key)) {
+                            data1.push(key);
+                            data2.push(countBy[key]);
+                        }
+
+                    }
+
+                    return array
+                }
+
+
+            },
+            sumValue(){
+                var vm = this
+                return _(vm.groupBy[vm.selected].name).map(function (obj) {
+                    return obj.Year
+                }).uniq().map(function (key) {
+                    var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({Year: key}).sumBy('Duration'), 'seconds');
+                    return {
+                        key: key,
+                        val: _(vm.groupBy[vm.selected].name).filter({Year: key}).sumBy('Duration'),
+                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
+                    };
+                }).value();
+            },
             groupBy(){
                 var vm = this
                 return _(vm.dataValue).groupBy(function (x) {
@@ -54,15 +132,34 @@
                     return {course: key, name: value};
                 }).value();
             },
+
+            tableBy(){
+                var vm = this
+                return _.reverse(_.sortBy(_(vm.groupBy[vm.selected].name).map(function (obj) {
+                    return obj.name
+                }).uniq().map(function (key) {
+                    var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({name: key}).sumBy('Duration'), 'seconds');
+                    return {
+                        key: key,
+                        val: _(vm.groupBy[vm.selected].name).filter({name: key}).sumBy('Duration'),
+                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
+                    };
+                }).value(), ['val']))
+            },
+
             selectedCourse(){
                 var vm = this;
                 return vm.groupBy[vm.selected]
             }
 
         },
-        methods:{
+        methods: {
             selectedMenu(selected){
-                this.selected = selected
+                var vm = this
+                vm.selected = selected
+                vm.selectedPaned.tabs = 'count_log'
+                vm.lineLabel =[]
+                vm.lineData= []
             }
         }
     }

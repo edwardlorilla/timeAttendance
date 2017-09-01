@@ -17,7 +17,9 @@ import timeLine from  './components/TimeLog/timeLine'
 import timeDoughnut from  './components/TimeLog/timeDoughnut'
 import lineTime from  './components/TimeLog/LineChart'
 import attendanceChart from  './components/TimeLog/AttendaceChart.vue'
+import viewProfile from  './components/Auth/viewProfile.vue'
 import Crosstab from 'vue-crosstab'
+import fade from  './components/Transition/fade.vue'
 import pictureUpload from 'vue-picture-input'
 import { Bar, Pie } from 'vue-chartjs'
 Vue.component('cross-tabs', function (resolve, reject) {
@@ -106,5 +108,16 @@ Vue.component("attendance-chart", function(resolve){
     setTimeout(function(){
         resolve(attendanceChart)
     }, 100)
+});
+Vue.component("view-profile", function(resolve){
+    setTimeout(function(){
+        resolve(viewProfile)
+    }, 100)
+});
+
+Vue.component('fade', function (resolve, reject) {
+    setTimeout(function () {
+        resolve(fade)
+    }, 600)
 });
 

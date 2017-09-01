@@ -1,14 +1,14 @@
 webpackJsonp([0],{
 
-/***/ 621:
+/***/ 626:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(6)(
+var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(625),
+  __webpack_require__(629),
   /* template */
-  __webpack_require__(626),
+  __webpack_require__(630),
   /* styles */
   null,
   /* scopeId */
@@ -41,13 +41,27 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 625:
+/***/ 629:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__state_view__ = __webpack_require__(78);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -87,10 +101,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         var vm = this;
         return {
+            toggleChart: false,
             courses: [],
-            isEdit: __WEBPACK_IMPORTED_MODULE_0__state__["h" /* isEdit */],
+            isEdit: __WEBPACK_IMPORTED_MODULE_0__state__["i" /* isEdit */],
             data: __WEBPACK_IMPORTED_MODULE_0__state__["a" /* data */],
             state_view: __WEBPACK_IMPORTED_MODULE_1__state_view__["d" /* state_view */],
+            courseFilter: {
+                data: [],
+                data2: []
+            },
 
             customFilters: [{
                 vals: '',
@@ -158,8 +177,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 label: "Actions",
                 def: [{
                     handler: function handler(row) {
-                        Object(__WEBPACK_IMPORTED_MODULE_0__state__["j" /* setEditData */])(row.id);
-                        Object(__WEBPACK_IMPORTED_MODULE_0__state__["i" /* isToggle */])();
+                        Object(__WEBPACK_IMPORTED_MODULE_0__state__["k" /* setEditData */])(row.id);
+                        Object(__WEBPACK_IMPORTED_MODULE_0__state__["j" /* isToggle */])();
                     },
                     name: "Edit"
                 }, {
@@ -214,6 +233,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 };
                 return object;
             });
+        },
+        chartCourse: function chartCourse() {
+            var vm = this;
+            var getData = vm.getData;
+            var countBy = _.countBy(getData, function (o) {
+                return o.course;
+            });
+
+            var data1 = vm.courseFilter.data;
+            var data2 = vm.courseFilter.data2;
+            var array = [];
+            for (var key in countBy) {
+                if (countBy.hasOwnProperty(key)) {
+                    data1.push(key);
+                    data2.push(countBy[key]);
+                    array.push({ key: key, val: countBy[key] });
+                }
+            }
+
+            return array;
+        },
+        pluckYear: function pluckYear() {
+            var vm = this;
+            var getData = vm.getData;
+            return _.countBy(getData, function (o) {
+                return o.year;
+            });
         }
     },
     methods: {
@@ -247,7 +293,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 626:
+/***/ 630:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -257,7 +303,36 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-md-10 col-md-offset-1"
-  }, [(_vm.state_view.state_view) ? _c('create-data') : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data') : _vm._e(), _vm._v(" "), _c('data-tables', {
+  }, [(_vm.state_view.state_view) ? _c('create-data') : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data') : _vm._e(), _vm._v(" "), _c('el-card', {
+    staticClass: "box-card"
+  }, [_c('div', {
+    staticClass: "clearfix",
+    slot: "header"
+  }, [_c('span', {
+    staticStyle: {
+      "line-height": "36px"
+    }
+  }, [_vm._v("\n\n                        Visitor Lists\n\n                    ")]), _vm._v(" "), _c('el-button', {
+    staticStyle: {
+      "float": "right"
+    },
+    attrs: {
+      "type": "primary"
+    },
+    on: {
+      "click": function($event) {
+        _vm.toggleChart = !_vm.toggleChart
+      }
+    }
+  }, [_vm._v("Toggle Chart")])], 1), _vm._v(" "), (_vm.toggleChart) ? _c('time-line', {
+    attrs: {
+      "type": "bar",
+      "dataSet": _vm.chartCourse
+    }
+  }) : _vm._e(), _vm._v(" "), _c('data-tables', {
+    staticStyle: {
+      "margin-top": "2vh"
+    },
     attrs: {
       "custom-filters": _vm.customFilters,
       "data": _vm.getData,
@@ -327,7 +402,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "sortable": "custom"
       }
     })
-  })], 2)], 1)])])
+  })], 2)], 1)], 1)])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
