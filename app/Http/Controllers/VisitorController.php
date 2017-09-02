@@ -7,6 +7,7 @@ use App\Visitor;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\Rule;
 
 class VisitorController extends Controller
 {
@@ -53,7 +54,7 @@ class VisitorController extends Controller
             'year' => 'required',
             'category_id' => 'required',
             'course_id' => 'required',
-            'schoolId' => 'required',
+            'schoolId' => ['required', Rule::unique('visitors')->ignore(auth()->id())],
             'gender_id' => 'required'
         ]);
         $visitor = new Visitor([

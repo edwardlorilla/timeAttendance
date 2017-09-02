@@ -12,7 +12,7 @@ function fetch(urlFetch) {
             year: pick.year,
             category: pick.category ? pick.category : '',
             gender: pick.gender ? _.toString(pick.gender.id) : '',
-            schoolId: pick.schoolId ? pick.schoolId : '',
+            schoolId: pick.schoolId,
             course: pick.course ? pick.course : '',
             disabled: pick.disabled != 0 ? true : false,
             photos: _.isEmpty(pick.photos) ? '' : pick.photos,

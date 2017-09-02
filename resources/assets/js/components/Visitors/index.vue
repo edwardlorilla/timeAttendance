@@ -4,7 +4,7 @@
         <div class="row">
 
             <div class="col-md-10 col-md-offset-1">
-                <create-data v-if="state_view.state_view"></create-data>
+                <create-data :pluckSchoolId="pluckSchoolId" v-if="state_view.state_view"></create-data>
                 <edit-data v-if="isEdit.isToggle"></edit-data>
 
                 <el-card class="box-card">
@@ -149,6 +149,7 @@
 
         },
         computed: {
+
             pluckCourses(){
                 var courses = this.getData
                 var map = _.map(courses, function(num, key){ return !_.isEmpty(num) ?num.course :null });
@@ -163,18 +164,24 @@
                 var pluckFilter = _.filter(unique, function(fil){ return fil == "" ? null : fil  });
                 return pluckFilter
             },
+            pluckSchoolId(){
+                var vm = this
+                return  _.map(vm.data.data, 'schoolId')
+
+            },
 
 
             getData(){
                 return _.map(this.data.data, function (num) {
-                    var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos', 'photo')
+                    var pick = _.pick(num, 'schoolId ', 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos', 'photo')
                     var object = {
                         id: pick.id,
                         name: pick.name,
                         year: pick.year,
                         category: pick.category ? pick.category.name : '',
                         course: pick.course ? pick.course.course : '',
-                        avatar: !_.isEmpty(pick.photo) ?  '/images/' + pick.photo.file : {file: null, id: null}
+                        avatar: !_.isEmpty(pick.photo) ?  '/images/' + pick.photo.file : {file: null, id: null},
+                        schoolId: pick.schoolId
                     }
                     return object
                 })

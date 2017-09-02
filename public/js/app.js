@@ -16542,7 +16542,7 @@ function fetch(urlFetch) {
                 year: pick.year,
                 category: pick.category ? pick.category : '',
                 gender: pick.gender ? _.toString(pick.gender.id) : '',
-                schoolId: pick.schoolId ? pick.schoolId : '',
+                schoolId: pick.schoolId,
                 course: pick.course ? pick.course : '',
                 disabled: pick.disabled != 0 ? true : false,
                 photos: _.isEmpty(pick.photos) ? '' : pick.photos,
@@ -92382,8 +92382,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['pluckSchoolId'],
     data: function data() {
         return {
+            loading: false,
             image: '',
             courses: __WEBPACK_IMPORTED_MODULE_3__Course_courses__["a" /* courses */],
             categories: __WEBPACK_IMPORTED_MODULE_1__state_view__["a" /* category */],
@@ -92404,6 +92406,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
+        notificationDialog: function notificationDialog() {
+            var vm = this;
+            var boolean = _.includes(vm.pluckSchoolId, vm.formCreated.schoolId);
+
+            if (boolean == true) {
+                vm.$notify.info({
+                    title: 'Info',
+                    message: '"The school id has already been taken."'
+                });
+            }
+
+            return boolean;
+        },
+
         showItem: function showItem() {
             return this.formCreated.category.id === 3 || this.formCreated.category.id === 1;
         },
@@ -92444,6 +92460,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var vm = this;
 
             var addData = this.formCreated;
+            vm.loading = true;
             Object(__WEBPACK_IMPORTED_MODULE_0__form_api_form__["a" /* FormDataPost */])('/api/visitors', {
                 name: addData.name,
                 course_id: addData.course.id,
@@ -92469,7 +92486,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     message: 'Create User Successfully',
                     type: 'success'
                 });
-            }).catch(function (error) {});
+                vm.formCreated.schoolId = null;
+                vm.loading = false;
+            }).catch(function (error) {
+                vm.loading = false;
+                this.$notify.info({
+                    title: 'Info',
+                    message: 'Something went wrong!'
+                });
+            });
         },
         onChanged: function onChanged() {
             console.log("New picture loaded");
@@ -92698,7 +92723,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     slot: "footer"
   }, [_c('el-button', {
     attrs: {
-      "type": "primary"
+      "loading": _vm.loading,
+      "type": "primary",
+      "disabled": _vm.notificationDialog
     },
     on: {
       "click": _vm.postData
@@ -94286,7 +94313,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Year: _.toUpper(data.year),
                     LocalDate: data.LocalDate,
                     course: !_.isEmpty(data.course) ? data.course : null,
-                    name: data.visitor
+                    name: data.visitor,
+                    studentId: data.schoolId
 
                 };
                 return obj;
@@ -94880,7 +94908,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         lineValue: function lineValue() {
             var vm = this;
-            var countBy = _.countBy(vm.dataValue, function (o) {
+            var name = vm.dataValue;
+            var uniq = _.uniqBy(name, 'studentId');
+            var countBy = _.countBy(uniq, function (o) {
                 return vm.$moment(o.LocalDate).format('MMMM');
             });
             var data1 = vm.lineLabel;
@@ -94900,10 +94930,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var vm = this;
             return _(vm.dataValue).map('Year').uniq().map(function (key) {
                 var duration = vm.$moment.duration(_(vm.dataValue).filter({ Year: key }).sumBy('Duration'), 'seconds');
+                var filter = _(vm.dataValue).filter({ Year: key });
                 return {
                     key: key,
-                    val: _(vm.dataValue).filter({ Year: key }).sumBy('Duration'),
-                    timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
+                    val: filter.sumBy('Duration'),
+                    timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss'),
+                    no: filter.size()
                 };
             }).value();
         }
@@ -114980,6 +115012,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -115002,7 +115038,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         lineValue: function lineValue() {
             var vm = this;
             if (vm.selectedCourse) {
-                var countBy = _.countBy(vm.selectedCourse.name, function (o) {
+
+                var name = vm.selectedCourse.name;
+                var uniq = _.uniqBy(name, 'studentId');
+
+                var countBy = _.countBy(uniq, function (o) {
                     return vm.$moment(o.LocalDate).format('MMMM');
                 });
                 var data1 = vm.lineLabel;
@@ -115028,10 +115068,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return obj.Year;
             }).uniq().map(function (key) {
                 var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({ Year: key }).sumBy('Duration'), 'seconds');
+                var filter = _(vm.groupBy[vm.selected].name).filter({ Year: key });
                 return {
                     key: key,
-                    val: _(vm.groupBy[vm.selected].name).filter({ Year: key }).sumBy('Duration'),
-                    timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
+                    val: filter.sumBy('Duration'),
+                    timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss'),
+                    noVisit: filter.size().toString()
                 };
             }).value();
         },
@@ -115046,12 +115088,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         tableBy: function tableBy() {
             var vm = this;
             return _.reverse(_.sortBy(_(vm.groupBy[vm.selected].name).map(function (obj) {
-                return obj.name;
+                return obj.studentId;
             }).uniq().map(function (key) {
-                var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({ name: key }).sumBy('Duration'), 'seconds');
+                var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({ studentId: key }).sumBy('Duration'), 'seconds');
+                var filter = _(vm.groupBy[vm.selected].name).filter({ studentId: key });
+                var name = _(filter).map(function (obj) {
+                    return obj.name;
+                }).uniq().head();
                 return {
                     key: key,
-                    val: _(vm.groupBy[vm.selected].name).filter({ name: key }).sumBy('Duration'),
+                    name: name,
+                    val: filter.sumBy('Duration'),
+                    noVisit: filter.size().toString(),
                     timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
                 };
             }).value(), ['val']));
@@ -115159,13 +115207,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('el-table-column', {
     attrs: {
-      "prop": "key",
+      "prop": "name",
       "label": "Name"
     }
   }), _vm._v(" "), _c('el-table-column', {
     attrs: {
       "prop": "timeValue",
       "label": "Time Spend"
+    }
+  }), _vm._v(" "), _c('el-table-column', {
+    attrs: {
+      "prop": "noVisit",
+      "label": "no. of visit"
     }
   })], 1) : _vm._e()], 1), _vm._v(" "), _c('el-tab-pane', {
     attrs: {

@@ -21,12 +21,16 @@
                                 border
                                 style="width: 100%">
                             <el-table-column
-                                    prop="key"
+                                    prop="name"
                                     label="Name">
                             </el-table-column>
                             <el-table-column
                                     prop="timeValue"
                                     label="Time Spend">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="noVisit"
+                                    label="no. of visit">
                             </el-table-column>
                         </el-table>
                     </el-tab-pane>
@@ -79,7 +83,6 @@
             }
         },
         filters: {
-
             toString(str){
                 return _.toString(str)
             }
@@ -88,7 +91,11 @@
             lineValue(){
                 var vm = this
                 if (vm.selectedCourse) {
-                    var countBy = _.countBy(vm.selectedCourse.name, function (o) {
+
+                    var name = vm.selectedCourse.name;
+                    var uniq = _.uniqBy(name, 'studentId')
+
+                    var countBy = _.countBy(uniq, function (o) {
                         return vm.$moment(o.LocalDate).format('MMMM');
                     });
                     var data1 = vm.lineLabel;
@@ -117,13 +124,16 @@
                     return obj.Year
                 }).uniq().map(function (key) {
                     var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({Year: key}).sumBy('Duration'), 'seconds');
+                    var filter = _(vm.groupBy[vm.selected].name).filter({Year: key});
                     return {
                         key: key,
-                        val: _(vm.groupBy[vm.selected].name).filter({Year: key}).sumBy('Duration'),
-                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
+                        val: filter.sumBy('Duration'),
+                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss'),
+                        noVisit: filter.size().toString()
                     };
                 }).value();
             },
+
             groupBy(){
                 var vm = this
                 return _(vm.dataValue).groupBy(function (x) {
@@ -136,12 +146,18 @@
             tableBy(){
                 var vm = this
                 return _.reverse(_.sortBy(_(vm.groupBy[vm.selected].name).map(function (obj) {
-                    return obj.name
+                    return obj.studentId
                 }).uniq().map(function (key) {
-                    var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({name: key}).sumBy('Duration'), 'seconds');
+                    var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({studentId: key}).sumBy('Duration'), 'seconds');
+                    var filter = _(vm.groupBy[vm.selected].name).filter({studentId: key});
+                    var name =  _(filter).map(function(obj){
+                        return obj.name
+                    }).uniq().head();
                     return {
                         key: key,
-                        val: _(vm.groupBy[vm.selected].name).filter({name: key}).sumBy('Duration'),
+                        name: name,
+                        val: filter.sumBy('Duration'),
+                        noVisit: filter.size().toString(),
                         timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
                     };
                 }).value(), ['val']))

@@ -92,7 +92,7 @@
                     }
                 }))
             },
-
+            
             dataCapitalize(){
                 var vm = this
                 return _.sortBy(_.map(this.data.all, function (data) {
@@ -102,7 +102,8 @@
                         Year: _.toUpper(data.year),
                         LocalDate: data.LocalDate,
                         course: !_.isEmpty(data.course) ? data.course : null,
-                        name: data.visitor
+                        name: data.visitor,
+                        studentId: data.schoolId
 
                     }
                     return obj

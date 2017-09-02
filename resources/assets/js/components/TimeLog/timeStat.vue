@@ -77,7 +77,9 @@
         computed: {
             lineValue(){
                 var vm = this
-                var countBy = _.countBy(vm.dataValue, function (o) {
+                var name = vm.dataValue;
+                var uniq = _.uniqBy(name, 'studentId')
+                var countBy = _.countBy(uniq, function (o) {
                     return vm.$moment(o.LocalDate).format('MMMM');
                 });
                 var data1 = vm.lineLabel;
@@ -98,10 +100,12 @@
                 var vm = this
                 return _(vm.dataValue).map('Year').uniq().map(function (key) {
                     var duration = vm.$moment.duration(_(vm.dataValue).filter({Year: key}).sumBy('Duration'), 'seconds');
+                    var filter = _(vm.dataValue).filter({Year: key});
                     return {
                         key: key,
-                        val: _(vm.dataValue).filter({Year: key}).sumBy('Duration'),
-                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
+                        val: filter.sumBy('Duration'),
+                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss'),
+                        no: filter.size()
                     };
                 }).value();
             },

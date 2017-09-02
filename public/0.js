@@ -220,16 +220,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             return pluckFilter;
         },
+        pluckSchoolId: function pluckSchoolId() {
+            var vm = this;
+            return _.map(vm.data.data, 'schoolId');
+        },
         getData: function getData() {
             return _.map(this.data.data, function (num) {
-                var pick = _.pick(num, 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos', 'photo');
+                var pick = _.pick(num, 'schoolId ', 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos', 'photo');
                 var object = {
                     id: pick.id,
                     name: pick.name,
                     year: pick.year,
                     category: pick.category ? pick.category.name : '',
                     course: pick.course ? pick.course.course : '',
-                    avatar: !_.isEmpty(pick.photo) ? '/images/' + pick.photo.file : { file: null, id: null }
+                    avatar: !_.isEmpty(pick.photo) ? '/images/' + pick.photo.file : { file: null, id: null },
+                    schoolId: pick.schoolId
                 };
                 return object;
             });
@@ -303,7 +308,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-md-10 col-md-offset-1"
-  }, [(_vm.state_view.state_view) ? _c('create-data') : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data') : _vm._e(), _vm._v(" "), _c('el-card', {
+  }, [(_vm.state_view.state_view) ? _c('create-data', {
+    attrs: {
+      "pluckSchoolId": _vm.pluckSchoolId
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data') : _vm._e(), _vm._v(" "), _c('el-card', {
     staticClass: "box-card"
   }, [_c('div', {
     staticClass: "clearfix",

@@ -76,7 +76,7 @@
 
 
   <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="postData">{{'Add ' + categoryTitle | ucFirstAllWords }}</el-button>
+          <el-button :loading="loading" type="primary" @click="postData" :disabled="notificationDialog" >{{'Add ' + categoryTitle | ucFirstAllWords }}</el-button>
 <el-button @click="resetForm('validateForm')">Reset</el-button>
       <el-button @click="closeData">Cancel</el-button>
   </span>
@@ -92,9 +92,10 @@
     import {data as DATA}from './state'
     import {fetchCourses, courses} from './../Course/courses'
     export default {
-
+        props:['pluckSchoolId'],
         data(){
             return {
+                loading: false,
                 image: '',
                 courses: courses,
                 categories: category,
@@ -114,6 +115,19 @@
             }
         },
         computed: {
+            notificationDialog(){
+                var vm = this
+                var boolean = _.includes(vm.pluckSchoolId, vm.formCreated.schoolId)
+
+                if(boolean == true){
+                    vm.$notify.info({
+                        title: 'Info',
+                        message: '"The school id has already been taken."'
+                    });
+                }
+
+                return boolean
+            },
             showItem: function () {
                 return this.formCreated.category.id === 3 || this.formCreated.category.id === 1;
             },
@@ -155,6 +169,7 @@
                 var vm = this;
 
                 var addData = this.formCreated;
+                vm.loading = true
                 FormDataPost('/api/visitors', {
                     name: addData.name,
                     course_id: addData.course.id,
@@ -165,6 +180,7 @@
                     gender_id: addData.gender
                 })
                         .then(function (response) {
+
 
                             DATA.data.unshift({
                                 id: response.data.data.id,
@@ -181,11 +197,15 @@
                                 message: 'Create User Successfully',
                                 type: 'success'
                             })
-
-
+                            vm.formCreated.schoolId = null
+                            vm.loading = false
                         })
                         .catch(function (error) {
-
+                            vm.loading = false
+                            this.$notify.info({
+                                title: 'Info',
+                                message: 'Something went wrong!'
+                            });
                         });
             },
             onChanged() {
