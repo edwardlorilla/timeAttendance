@@ -312,7 +312,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "pluckSchoolId": _vm.pluckSchoolId
     }
-  }) : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data') : _vm._e(), _vm._v(" "), _c('el-card', {
+  }) : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data', {
+    attrs: {
+      "pluckSchoolId": _vm.pluckSchoolId
+    }
+  }) : _vm._e(), _vm._v(" "), _c('el-card', {
     staticClass: "box-card"
   }, [_c('div', {
     staticClass: "clearfix",

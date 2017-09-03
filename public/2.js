@@ -260,7 +260,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         Object(__WEBPACK_IMPORTED_MODULE_2__TimeLog_state__["b" /* addTimeId */])(response.data.data.id, addTime.visitor_id);
                         if (userDetail.time_id) {
                             Object(__WEBPACK_IMPORTED_MODULE_1__Visitors_state__["c" /* disableSelected */])(userDetail, 1);
-                            vm.timeObj = Object(__WEBPACK_IMPORTED_MODULE_2__TimeLog_state__["c" /* findTimeId */])(userDetail.time_id);
+                            userDetail.time = Object(__WEBPACK_IMPORTED_MODULE_2__TimeLog_state__["c" /* findTimeId */])(userDetail.time_id);
                         }
                     }).catch(function (error) {
                         console.log(error);
@@ -405,7 +405,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "loading": _vm.loading,
       "autoUpdate": _vm.autoUpdate,
       "currentLang": _vm.currentLang,
-      "addTd": _vm.timeObj
+      "addTd": _vm.formInline.user.time
     }
   })], 1)]), _vm._v(" "), _c('el-tab-pane', {
     attrs: {

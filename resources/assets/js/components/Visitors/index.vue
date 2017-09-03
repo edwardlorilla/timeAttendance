@@ -5,7 +5,7 @@
 
             <div class="col-md-10 col-md-offset-1">
                 <create-data :pluckSchoolId="pluckSchoolId" v-if="state_view.state_view"></create-data>
-                <edit-data v-if="isEdit.isToggle"></edit-data>
+                <edit-data :pluckSchoolId="pluckSchoolId"  v-if="isEdit.isToggle"></edit-data>
 
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">

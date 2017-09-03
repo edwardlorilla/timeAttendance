@@ -16535,7 +16535,7 @@ function fetch(urlFetch) {
     axios.get(urlFetch).then(function (response) {
         return data.data = _.map(response.data, function (num) {
             var photo_obj = { file: null, id: null };
-            var pick = _.pick(num, 'id', 'photos', 'photo', 'name', 'category', 'gender', 'year', 'category_id', 'schoolId', 'course', 'disabled');
+            var pick = _.pick(num, 'time', 'time_id', 'id', 'photos', 'photo', 'name', 'category', 'gender', 'year', 'category_id', 'schoolId', 'course', 'disabled');
             var object = {
                 id: pick.id,
                 name: pick.name,
@@ -16547,7 +16547,8 @@ function fetch(urlFetch) {
                 disabled: pick.disabled != 0 ? true : false,
                 photos: _.isEmpty(pick.photos) ? '' : pick.photos,
                 photo: _.isEmpty(pick.photo) ? photo_obj : pick.photo ? pick.photo : photo_obj,
-                time_id: _.isEmpty(pick.time) ? null : pick.time
+                time_id: _.isEmpty(pick.time_id) ? null : pick.time_id,
+                time: _.isEmpty(pick.time) ? null : pick.time
             };
             return object;
         });
@@ -34232,7 +34233,7 @@ function addTimeId(userId, visitor) {
 
 function addEndTime(request) {
     var found = _.findIndex(timelogs.all, { id: request.id });
-    console.log(found);
+    console.log(request);
     timelogs.all[found].LocaleEndTime = Object(__WEBPACK_IMPORTED_MODULE_0__event_log__["e" /* utcDate */])();
     _.setWith(timelogs.all[found], 'autoUpdate', 0);
 }
@@ -55603,11 +55604,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var d = new Date();
 var now = d.getTime();
 var TIME = d.toLocaleTimeString();
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['addTd', 'currentLang', 'autoUpdate', 'loading', 'finishRow'],
     data: function data() {
         return {};
     },
+
 
     filters: {
         parseInt: function (_parseInt) {
@@ -92851,16 +92854,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['pluckSchoolId'],
     data: function data() {
         return {
             activeName: 'first',
-            cloneData: null,
+            cloneData: '',
             image: '',
             courses: __WEBPACK_IMPORTED_MODULE_1__Course_courses__["a" /* courses */],
             categories: __WEBPACK_IMPORTED_MODULE_2__state_view__["a" /* category */],
@@ -92877,6 +92882,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
+        exceptStudentId: function exceptStudentId() {
+            var vm = this;
+            return _.filter(vm.pluckSchoolId, function (num) {
+                return num !== vm.cloneData.schoolId;
+            });
+        },
+        alertNotification: function alertNotification() {
+            var vm = this;
+            return vm.notificationDialog ? vm.$notify.info({
+                title: 'Info',
+                message: '"The school id has already been taken."'
+            }) : false;
+        },
+        notificationDialog: function notificationDialog() {
+            var vm = this;
+            return _.includes(vm.exceptStudentId, vm.dialogFormVisible.editData.schoolId);
+        },
         dialogFormVisibles: function dialogFormVisibles() {
             return this.dialogFormVisible ? this.dialogFormVisible.editData : '';
         },
@@ -93003,7 +93025,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('el-dialog', {
+  return (_vm.dialogFormVisible.editData.schoolId) ? _c('el-dialog', {
     attrs: {
       "title": 'Edit ' + _vm.dialogFormVisibles.name,
       "visible": _vm.dialogFormVisible.isToggle,
@@ -93093,6 +93115,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     slot: "footer"
   }, [_c('button', {
     staticClass: "btn btn-primary",
+    attrs: {
+      "disabled": _vm.notificationDialog
+    },
     on: {
       "click": function($event) {
         _vm.handleClose()
@@ -93102,7 +93127,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.closeData
     }
-  }, [_vm._v("Cancel")])], 1)], 1)
+  }, [_vm._v("Cancel")])], 1)], 1) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -115016,6 +115041,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -115093,11 +115128,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({ studentId: key }).sumBy('Duration'), 'seconds');
                 var filter = _(vm.groupBy[vm.selected].name).filter({ studentId: key });
                 var name = _(filter).map(function (obj) {
-                    return obj.name;
+                    return obj;
                 }).uniq().head();
                 return {
                     key: key,
-                    name: name,
+                    name: name.name,
+                    year: name.Year,
                     val: filter.sumBy('Duration'),
                     noVisit: filter.size().toString(),
                     timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
@@ -115110,6 +115146,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        filterTag: function filterTag(value, row) {
+            return row.year === value;
+        },
         selectedMenu: function selectedMenu(selected) {
             var vm = this;
             vm.selected = selected;
@@ -115203,12 +115242,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "data": _vm.tableBy,
       "height": "250",
-      "border": ""
+      "border": "",
+      "show-summary": ""
     }
   }, [_c('el-table-column', {
     attrs: {
       "prop": "name",
       "label": "Name"
+    }
+  }), _vm._v(" "), _c('el-table-column', {
+    attrs: {
+      "prop": "year",
+      "label": "Year",
+      "filters": [{
+        text: '1ST YEAR',
+        value: '1ST YEAR'
+      }, {
+        text: '2ND YEAR',
+        value: '2ND YEAR'
+      }],
+      "filter-method": _vm.filterTag,
+      "filter-placement": "bottom-end"
     }
   }), _vm._v(" "), _c('el-table-column', {
     attrs: {

@@ -18,12 +18,14 @@
     var d = new Date();
     const now = d.getTime()
     var TIME = d.toLocaleTimeString();
+
     export default {
         props: ['addTd','currentLang', 'autoUpdate','loading', 'finishRow'],
         data(){
             return{
             }
         },
+
         filters:{
             parseInt(str){
                 return parseInt(str)

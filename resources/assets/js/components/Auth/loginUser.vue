@@ -69,7 +69,7 @@
                                     :loading="loading"
                                     :autoUpdate="autoUpdate"
                                     :currentLang="currentLang"
-                                    :addTd="timeObj"
+                                    :addTd="formInline.user.time"
                             ></view-profile>
                         </p>
 
@@ -213,7 +213,7 @@
                                     addTimeId(response.data.data.id, addTime.visitor_id)
                                     if(userDetail.time_id){
                                         disableSelected(userDetail, 1)
-                                        vm.timeObj = findTimeId(userDetail.time_id)
+                                        userDetail.time = findTimeId(userDetail.time_id)
                                     }
                                 })
                                 .catch(function (error) {

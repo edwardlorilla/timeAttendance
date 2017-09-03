@@ -31,7 +31,7 @@ function updateEvent(request) {
     var found = _.findIndex(eventlogs.all, {id: request.id});
     console.log(found)
     if (eventlogs.all[found]) {
-
+        
         eventlogs.all[found].duration = request.duration
         eventlogs.all[found].disabled = false
         eventlogs.all[found].timeOut = request.LocaleEndTime

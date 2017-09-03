@@ -1,11 +1,11 @@
 <template>
-    <el-dialog :title="'Edit ' + dialogFormVisibles.name"
+    <el-dialog v-if="dialogFormVisible.editData.schoolId" :title="'Edit ' + dialogFormVisibles.name"
                :visible.sync="dialogFormVisible.isToggle"
                :before-close="handleClose"
                size="large"
     >
         <el-tabs v-model="activeName">
-            <el-tab-pane label="User Edit"  name="first">
+            <el-tab-pane label="User Edit" name="first">
                 <el-row v-if="activeName === 'first'" :gutter="20">
                     <el-col :span="16">
                         <form-edit :formLabelWidth="formLabelWidth" :rules="rules" :dialog="dialogFormVisible.editData"
@@ -36,13 +36,14 @@
                 </el-row>
             </el-tab-pane>
             <el-tab-pane label="Gallery" name="second">
-                <user-gallery v-if="activeName === 'second'" :userId="dialogFormVisible.editData.id" :photos_url="dialogFormVisible.editData.photos"></user-gallery>
+                <user-gallery v-if="activeName === 'second'" :userId="dialogFormVisible.editData.id"
+                              :photos_url="dialogFormVisible.editData.photos"></user-gallery>
             </el-tab-pane>
 
         </el-tabs>
 
          <span slot="footer" class="dialog-footer">
-   <button class="btn btn-primary" @click="handleClose()">{{'Edit ' + dialogFormVisible.editData.name}}
+   <button class="btn btn-primary" :disabled="notificationDialog" @click="handleClose()">{{'Edit ' + dialogFormVisible.editData.name}}
 
    </button> <el-button @click="closeData">Cancel</el-button>
   </span>
@@ -55,11 +56,11 @@
     import {fetchCategories, category} from './state_view'
     import {FormDataUpdate} from './../form_api/form'
     export default {
-
+        props: ['pluckSchoolId'],
         data(){
             return {
-                activeName:'first',
-                cloneData: null,
+                activeName: 'first',
+                cloneData: '',
                 image: '',
                 courses: courses,
                 categories: category,
@@ -79,7 +80,23 @@
             }
         },
         computed: {
-
+            exceptStudentId(){
+                var vm = this
+                return _.filter(vm.pluckSchoolId, function (num) {
+                    return num !== vm.cloneData.schoolId
+                })
+            },
+            alertNotification(){
+                var vm = this
+                return vm.notificationDialog ?  vm.$notify.info({
+                    title: 'Info',
+                    message: '"The school id has already been taken."'
+                }) : false;
+            },
+            notificationDialog(){
+                var vm = this
+                return  _.includes(vm.exceptStudentId, vm.dialogFormVisible.editData.schoolId)
+            },
             dialogFormVisibles(){
                 return this.dialogFormVisible ? this.dialogFormVisible.editData : ''
             },

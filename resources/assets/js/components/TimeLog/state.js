@@ -16,7 +16,7 @@ function addTimeId(userId, visitor){
 
 function addEndTime(request){
     var found = _.findIndex(timelogs.all, {id: request.id});
-    console.log(found)
+    console.log(request)
     timelogs.all[found].LocaleEndTime = utcDate();
     _.setWith(timelogs.all[found], 'autoUpdate',0 );
 }

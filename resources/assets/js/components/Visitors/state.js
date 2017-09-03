@@ -5,7 +5,7 @@ function fetch(urlFetch) {
 
     axios.get(urlFetch).then(response => data.data = _.map(response.data, function (num) {
         var photo_obj = {file: null, id: null};
-        var pick = _.pick(num, 'id', 'photos','photo', 'name', 'category','gender', 'year', 'category_id', 'schoolId', 'course', 'disabled');
+        var pick = _.pick(num, 'time', 'time_id','id', 'photos','photo', 'name', 'category','gender', 'year', 'category_id', 'schoolId', 'course', 'disabled');
         var object = {
             id: pick.id,
             name: pick.name,
@@ -17,7 +17,8 @@ function fetch(urlFetch) {
             disabled: pick.disabled != 0 ? true : false,
             photos: _.isEmpty(pick.photos) ? '' : pick.photos,
             photo: _.isEmpty(pick.photo) ? photo_obj  : (pick.photo ? pick.photo : photo_obj ),
-            time_id: _.isEmpty(pick.time) ? null  : pick.time
+            time_id: _.isEmpty(pick.time_id) ? null  : pick.time_id,
+            time: _.isEmpty(pick.time) ? null  : pick.time
         };
         return object
     }))

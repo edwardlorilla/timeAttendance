@@ -19,10 +19,19 @@
                                 :data="tableBy"
                                 height="250"
                                 border
+                                show-summary
                                 style="width: 100%">
                             <el-table-column
                                     prop="name"
                                     label="Name">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="year"
+                                    label="Year"
+                                    :filters="[{ text: '1ST YEAR', value: '1ST YEAR' }, { text: '2ND YEAR', value: '2ND YEAR' }]"
+                                    :filter-method="filterTag"
+                                    filter-placement="bottom-end"
+                            >
                             </el-table-column>
                             <el-table-column
                                     prop="timeValue"
@@ -32,6 +41,7 @@
                                     prop="noVisit"
                                     label="no. of visit">
                             </el-table-column>
+
                         </el-table>
                     </el-tab-pane>
                     <el-tab-pane name="Pie Chart" label="Pie Chart">
@@ -151,11 +161,12 @@
                     var duration = vm.$moment.duration(_(vm.groupBy[vm.selected].name).filter({studentId: key}).sumBy('Duration'), 'seconds');
                     var filter = _(vm.groupBy[vm.selected].name).filter({studentId: key});
                     var name =  _(filter).map(function(obj){
-                        return obj.name
+                        return obj
                     }).uniq().head();
                     return {
                         key: key,
-                        name: name,
+                        name: name.name,
+                        year: name.Year,
                         val: filter.sumBy('Duration'),
                         noVisit: filter.size().toString(),
                         timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss')
@@ -170,6 +181,9 @@
 
         },
         methods: {
+            filterTag(value, row) {
+                return row.year === value;
+            },
             selectedMenu(selected){
                 var vm = this
                 vm.selected = selected
