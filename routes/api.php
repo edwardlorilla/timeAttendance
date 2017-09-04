@@ -17,6 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/editPhoto', 'VisitorController@editPhoto');
+Route::post('/reportExcel', 'VisitorController@reportExcel');
 Route::post('/postPhoto/{visitor}', 'VisitorController@postPhoto');
 Route::resource('/visitors', 'VisitorController');
 Route::resource('/categories', 'CategoryController');

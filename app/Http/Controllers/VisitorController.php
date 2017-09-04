@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Photo;
 use App\Visitor;
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use PHPExcel;
+use PHPExcel_Chart;
+use PHPExcel_Chart_DataSeries;
+use PHPExcel_Chart_DataSeriesValues;
+use PHPExcel_Chart_Legend;
+use PHPExcel_Chart_PlotArea;
+use PHPExcel_Chart_Title;
 
 class VisitorController extends Controller
 {
@@ -138,7 +147,7 @@ class VisitorController extends Controller
 
         $photo = new Photo();
         $name = null;
-        if($file = $request->file('avatar')){
+        if ($file = $request->file('avatar')) {
             $name = time() . $file->getClientOriginalName();
             $file->move('images', $name);
             $photo = $photo->create(['file' => $name]);
@@ -155,7 +164,7 @@ class VisitorController extends Controller
     public function postPhoto(Request $request, $visitor)
     {
         $photo = new Photo();
-        if($file = $request->file('file')){
+        if ($file = $request->file('file')) {
             $name = time() . $file->getClientOriginalName();
             $file->move('images', $name);
             $photo = $photo->create(['file' => $name]);
@@ -165,5 +174,20 @@ class VisitorController extends Controller
         Cache::forget('visitor:all');
         return response()->json(['photo_name' => $photo->file, 'photo_id' => $photo->id]);
     }
-    
+
+    public function reportExcel(Request $request)
+    {
+        $data = $request->all();
+
+        Excel::load(public_path('storage/template.xls'), function ($excel) use ($data) {
+
+            $excel->sheet('Sheet1', function ($sheet) use ($data) {
+                $sheet->fromArray($data, null, 'A8', false, false);
+                $sheet->setCellValue("h5", Carbon::now()->toFormattedDateString());
+            });
+
+        }, 'UTF-8')->store('xls', public_path('storage/'));
+        return response()->json(['data' => 'http://' . $request->server('HTTP_HOST') . '/storage/template.xls']);
+    }
+
 }

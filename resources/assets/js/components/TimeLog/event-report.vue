@@ -29,7 +29,10 @@
                   </el-select>
             </span>
 
-                <el-button style="float: right;" type="primary">Operation button</el-button>
+                    <button @click="importWordBook" type="submit" class="el-button el-button--primary" style="float: right;">
+                        <span>Import Report</span>
+                    </button>
+
             </div>
             <cross-tabs
                     :data="filteredData"
@@ -50,6 +53,7 @@
 
 <script>
     import {timeFetch, eventlogs} from './event-log'
+    import {workBookReport} from './report/excel'
     export default {
         data(){
             return {
@@ -92,7 +96,7 @@
                     }
                 }))
             },
-            
+
             dataCapitalize(){
                 var vm = this
                 return _.sortBy(_.map(this.data.all, function (data) {
@@ -108,6 +112,17 @@
                     }
                     return obj
                 }), 'Year')
+            }
+        },
+        methods: {
+            importWordBook(){
+
+                var data = _(this.filteredData)
+                        .groupBy('course')
+                        .map(function (items, course) {
+                            return {course: course, count: items.length}
+                        }).value();
+                workBookReport(data)
             }
         }
 

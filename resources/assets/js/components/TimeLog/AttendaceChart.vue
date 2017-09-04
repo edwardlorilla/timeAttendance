@@ -55,7 +55,7 @@
                         <time-line v-if="selectedPaned.tabs == 'Bar Chart'" type="bar" :dataSet="sumValue"></time-line>
                     </el-tab-pane>
                     <el-tab-pane name="Line Chart" label="Line Chart">
-                        <line-time v-if="selectedPaned.tabs == 'Line Chart'" :label="lineLabel"
+                        <line-time v-if="selectedPaned.tabs == 'Line Chart'" :download="true" :label="lineLabel"
                                    :dataSet="lineData"></line-time>
                     </el-tab-pane>
                 </el-tabs>
