@@ -3,6 +3,7 @@
  */
 window.Vue = require('vue');
 import createData from  './components/Visitors/create.vue'
+import reportVisitor from  './components/Visitors/indexReport.vue'
 import editData from  './components/Visitors/edit.vue'
 import editForm from  './components/Visitors/form_edit.vue'
 import userGallery from  './components/Visitors/user_gallery.vue'
@@ -17,6 +18,8 @@ import timeLine from  './components/TimeLog/timeLine'
 import timeDoughnut from  './components/TimeLog/timeDoughnut'
 import lineTime from  './components/TimeLog/LineChart'
 import attendanceChart from  './components/TimeLog/AttendaceChart.vue'
+import allCourses from  './components/TimeLog/allCourses.vue'
+import allCoursesBar from  './components/TimeLog/allCoursesBar'
 import viewProfile from  './components/Auth/viewProfile.vue'
 import Crosstab from 'vue-crosstab'
 import fade from  './components/Transition/fade.vue'
@@ -119,5 +122,19 @@ Vue.component('fade', function (resolve, reject) {
     setTimeout(function () {
         resolve(fade)
     }, 600)
-});
-
+})
+Vue.component('all-courses', function (resolve, reject) {
+    setTimeout(function () {
+        resolve(allCourses)
+    }, 600)
+})
+Vue.component('all-courses-bar', function (resolve, reject) {
+    setTimeout(function () {
+        resolve(allCoursesBar)
+    }, 600)
+})
+Vue.component('report-visitor', function (resolve, reject) {
+    setTimeout(function () {
+        resolve(reportVisitor)
+    }, 600)
+})

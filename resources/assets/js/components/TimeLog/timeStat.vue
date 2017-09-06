@@ -66,58 +66,24 @@
 <script>
     import {view} from './timeStatState'
     export default {
-        props: ['dataValue'],
+        props: ['sumValue','lineValue', 'lineData', 'lineLabel'],
         data(){
             return {
                 selectedPaned: view,
-                lineLabel: [],
-                lineData: []
             }
         },
         computed: {
-            lineValue(){
-                var vm = this
-                var name = vm.dataValue;
-                var uniq = _.uniqBy(name, 'studentId')
-                var countBy = _.countBy(uniq, function (o) {
-                    return vm.$moment(o.LocalDate).format('MMMM');
-                });
-                var data1 = vm.lineLabel;
-                var data2 = vm.lineData;
-                var array = [];
-                for (var key in countBy) {
-                    if (countBy.hasOwnProperty(key)) {
-                        data1.push(key);
-                        data2.push(countBy[key]);
-                        array.push({month: key, count: countBy[key]})
-                    }
-                }
 
-                return array
 
-            },
-            sumValue(){
-                var vm = this
-                return _(vm.dataValue).map('Year').uniq().map(function (key) {
-                    var duration = vm.$moment.duration(_(vm.dataValue).filter({Year: key}).sumBy('Duration'), 'seconds');
-                    var filter = _(vm.dataValue).filter({Year: key});
-                    return {
-                        key: key,
-                        val: filter.sumBy('Duration'),
-                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss'),
-                        no: filter.size()
-                    };
-                }).value();
-            },
 
         },
         methods: {
             handleClick(){
-                var vm = this
+               /* var vm = this
                 if(!(_.isEmpty(vm.lineLabel) || _.isEmpty(vm.lineLabel))){
                     vm.lineLabel = []
                     vm.lineData = []
-                }
+                }*/
 
             }
         }

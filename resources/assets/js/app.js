@@ -6,7 +6,6 @@
 
 require('./bootstrap');
 
-
 import routes from './routes.js';
 import App from './components/App.vue';
 import ElementUI from 'element-ui'
@@ -15,6 +14,7 @@ import DataTables from 'vue-data-tables'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 import components from './components'
+import directive from './directive'
 import VueTimeago from 'vue-timeago'
 import moment from 'moment'
 Object.defineProperty(Vue.prototype, '$moment', {
@@ -24,13 +24,6 @@ Object.defineProperty(Vue.prototype, '$moment', {
 })
 
 import {Line , Doughnut, Bar, Pie } from 'vue-chartjs'
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-
 Vue.use(ElementUI);
 Vue.use(DataTables);
 locale.use(lang);
@@ -49,15 +42,6 @@ const router = new VueRouter({
     linkActiveClass: 'active',
     routes: routes
 });
-
-/*const app = new Vue({
-    el: '#app',
-    data: {
-        moment
-    },
-    router,
-    render: r => r(App)
-});*/
 const app = new Vue({
     data: {
         moment

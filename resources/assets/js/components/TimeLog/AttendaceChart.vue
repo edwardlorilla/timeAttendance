@@ -52,7 +52,10 @@
                                        :dataSet="sumValue"></time-doughnut>
                     </el-tab-pane>
                     <el-tab-pane name="Bar Chart" label="Bar Chart">
+                        <div id="printArea">
+
                         <time-line v-if="selectedPaned.tabs == 'Bar Chart'" type="bar" :dataSet="sumValue"></time-line>
+                    </div>
                     </el-tab-pane>
                     <el-tab-pane name="Line Chart" label="Line Chart">
                         <line-time v-if="selectedPaned.tabs == 'Line Chart'" :download="true" :label="lineLabel"
@@ -177,7 +180,8 @@
             selectedCourse(){
                 var vm = this;
                 return vm.groupBy[vm.selected]
-            }
+            },
+
 
         },
         methods: {

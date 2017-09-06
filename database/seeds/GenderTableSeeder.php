@@ -11,7 +11,7 @@ class GenderTableSeeder extends Seeder
      */
     private $times = [
         ['id' => 1 , 'gender' => 'Male'],
-        ['id' => 0 , 'gender' => 'Female'],
+        ['id' => 2 , 'gender' => 'Female'],
     ];
     public function run()
     {

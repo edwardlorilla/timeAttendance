@@ -19,7 +19,7 @@
                             ]"
                                   :label-width="formLabelWidth">
                         <el-radio class="radio" v-model="formCreated.gender" label="1">Male</el-radio>
-                        <el-radio class="radio" v-model="formCreated.gender" label="0">Female</el-radio>
+                        <el-radio class="radio" v-model="formCreated.gender" label="2">Female</el-radio>
                     </el-form-item>
 
                     <el-form-item v-if="showItem" label="School ID" :label-width="formLabelWidth">
@@ -202,7 +202,7 @@
                         })
                         .catch(function (error) {
                             vm.loading = false
-                            this.$notify.info({
+                            vm.$notify.info({
                                 title: 'Info',
                                 message: 'Something went wrong!'
                             });

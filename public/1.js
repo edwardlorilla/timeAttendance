@@ -1,14 +1,14 @@
 webpackJsonp([1],{
 
-/***/ 628:
+/***/ 639:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(632),
+  __webpack_require__(644),
   /* template */
-  __webpack_require__(633),
+  __webpack_require__(645),
   /* styles */
   null,
   /* scopeId */
@@ -16,7 +16,7 @@ var Component = __webpack_require__(3)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "C:\\xampp\\htdocs\\timeAttendance\\resources\\assets\\js\\components\\TimeLog\\index.vue"
+Component.options.__file = "C:\\xampp\\htdocs\\timeAttendance\\resources\\assets\\js\\components\\Visitors\\index.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -27,9 +27,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-bf35ae00", Component.options)
+    hotAPI.createRecord("data-v-51b76af2", Component.options)
   } else {
-    hotAPI.reload("data-v-bf35ae00", Component.options)
+    hotAPI.reload("data-v-51b76af2", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -41,12 +41,13 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 632:
+/***/ 644:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_state__ = __webpack_require__(264);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__state_view__ = __webpack_require__(78);
 //
 //
 //
@@ -63,59 +64,364 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
+        var vm = this;
         return {
-            selectedPaned: __WEBPACK_IMPORTED_MODULE_0__tabs_state__["b" /* view */]
+            toggleChart: false,
+            courses: [],
+            isEdit: __WEBPACK_IMPORTED_MODULE_0__state__["i" /* isEdit */],
+            data: __WEBPACK_IMPORTED_MODULE_0__state__["a" /* data */],
+            state_view: __WEBPACK_IMPORTED_MODULE_1__state_view__["d" /* state_view */],
+            courseFilter: {
+                data: [],
+                data2: []
+            },
+
+            customFilters: [{
+                vals: '',
+                props: 'course'
+            }, {
+                vals: []
+            }, {
+                vals: '',
+                props: 'year'
+            }, {
+                vals: []
+            }],
+            titles: [{
+                prop: "category",
+                label: "Categorize"
+            }, {
+                prop: "name",
+                label: "Name"
+            }, {
+                prop: "year",
+                label: "Level"
+            }, {
+                prop: "course",
+                label: "Course"
+            }],
+            actionsDef: {
+                colProps: {
+                    span: 5
+                },
+
+                def: [{
+
+                    name: "new",
+                    handler: function handler() {
+                        Object(__WEBPACK_IMPORTED_MODULE_1__state_view__["b" /* change_view */])();
+                    },
+                    buttonProps: {
+                        type: "text"
+                    }
+                }, {
+                    name: "import",
+                    handler: function handler() {
+                        console.log('import');
+                    },
+                    icon: "upload"
+                }]
+            },
+            checkFilterDef: {
+                props: 'category',
+                def: [{
+                    code: "teacher",
+                    name: "Teacher"
+                }, {
+                    code: "senior high",
+                    name: "Senior High"
+                }, {
+                    code: "outsider",
+                    name: "Outsider"
+                }, {
+                    code: "mkd student",
+                    name: "Mkd Student"
+                }]
+            },
+            actionColDef: {
+                label: "Actions",
+                def: [{
+                    handler: function handler(row) {
+                        Object(__WEBPACK_IMPORTED_MODULE_0__state__["k" /* setEditData */])(row.id);
+                        Object(__WEBPACK_IMPORTED_MODULE_0__state__["j" /* isToggle */])();
+                    },
+                    name: "Edit"
+                }, {
+                    icon: "message",
+                    type: "text",
+                    handler: function handler(row) {
+                        console.log('RUA' + row);
+                        console.log("RUA in row clicked", row);
+                    },
+                    name: "RUA"
+                }]
+            }
         };
     },
+    mounted: function mounted() {
+        Object(__WEBPACK_IMPORTED_MODULE_0__state__["d" /* fetch */])('/api/visitors');
+    },
 
-    methods: {}
+    computed: {
+        pluckCourses: function pluckCourses() {
+            var courses = this.getData;
+            var map = _.map(courses, function (num, key) {
+                return !_.isEmpty(num) ? num.course : null;
+            });
+            var unique = _.uniq(map);
+            var pluckFilter = _.filter(unique, function (fil) {
+                return fil == "" ? null : fil;
+            });
+            return pluckFilter;
+        },
+        pluckLevel: function pluckLevel() {
+            var courses = this.getData;
+            var map = _.map(courses, function (num, key) {
+                return !_.isEmpty(num) ? num.year : null;
+            });
+            var unique = _.uniq(map);
+            var pluckFilter = _.filter(unique, function (fil) {
+                return fil == "" ? null : fil;
+            });
+            return pluckFilter;
+        },
+        pluckSchoolId: function pluckSchoolId() {
+            var vm = this;
+            return _.map(vm.data.data, 'schoolId');
+        },
+        getData: function getData() {
+            return _.map(this.data.data, function (num) {
+                var pick = _.pick(num, 'schoolId ', 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos', 'photo');
+                var object = {
+                    id: pick.id,
+                    name: pick.name,
+                    year: pick.year,
+                    category: pick.category ? pick.category.name : '',
+                    course: pick.course ? pick.course.course : '',
+                    avatar: !_.isEmpty(pick.photo) ? '/images/' + pick.photo.file : { file: null, id: null },
+                    schoolId: pick.schoolId
+                };
+                return object;
+            });
+        },
+        chartCourse: function chartCourse() {
+            var vm = this;
+            var getData = vm.getData;
+            var countBy = _.countBy(getData, function (o) {
+                return o.course;
+            });
+
+            var data1 = vm.courseFilter.data;
+            var data2 = vm.courseFilter.data2;
+            var array = [];
+            for (var key in countBy) {
+                if (countBy.hasOwnProperty(key)) {
+                    data1.push(key);
+                    data2.push(countBy[key]);
+                    array.push({ key: key, val: countBy[key] });
+                }
+            }
+
+            return array;
+        },
+        pluckYear: function pluckYear() {
+            var vm = this;
+            var getData = vm.getData;
+            return _.countBy(getData, function (o) {
+                return o.year;
+            });
+        }
+    },
+    methods: {
+        level: function level(year) {
+            var level;
+            if (year == '1') {
+                level = year + 'st year';
+            } else if (year == '2') {
+                level = year + 'nd year';
+            } else if (year == '3') {
+                level = year + 'rd year';
+            } else {
+                level = year + 'th year';
+            }
+            return level;
+        },
+        getRowActionsDef: function getRowActionsDef() {
+            var self = this;
+            return [{
+                type: 'primary',
+                handler: function handler(row) {
+                    console.log('Edit clicked');
+                    console.log('Edit in row clicked', row);
+                },
+
+                name: 'Edit'
+            }];
+        }
+    }
 });
 
 /***/ }),
 
-/***/ 633:
+/***/ 645:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "container-fluid"
-  }, [_c('el-tabs', {
+    staticClass: "container"
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-10 col-md-offset-1"
+  }, [(_vm.state_view.state_view) ? _c('create-data', {
     attrs: {
-      "type": "border-card"
+      "pluckSchoolId": _vm.pluckSchoolId
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data', {
+    attrs: {
+      "pluckSchoolId": _vm.pluckSchoolId
+    }
+  }) : _vm._e(), _vm._v(" "), _c('el-card', {
+    staticClass: "box-card"
+  }, [_c('div', {
+    staticClass: "clearfix",
+    slot: "header"
+  }, [_c('span', {
+    staticStyle: {
+      "line-height": "36px"
+    }
+  }, [_vm._v("\n\n                        Visitor Lists\n\n                    ")]), _vm._v(" "), _c('el-button', {
+    staticStyle: {
+      "float": "right"
+    },
+    attrs: {
+      "type": "primary"
+    },
+    on: {
+      "click": function($event) {
+        _vm.toggleChart = !_vm.toggleChart
+      }
+    }
+  }, [_vm._v("Toggle Chart")])], 1), _vm._v(" "), (_vm.toggleChart) ? _c('time-line', {
+    attrs: {
+      "type": "bar",
+      "dataSet": _vm.chartCourse
+    }
+  }) : _vm._e(), _vm._v(" "), _c('data-tables', {
+    staticStyle: {
+      "margin-top": "2vh"
+    },
+    attrs: {
+      "custom-filters": _vm.customFilters,
+      "data": _vm.getData,
+      "actions-def": _vm.actionsDef,
+      "checkbox-filter-def": _vm.checkFilterDef,
+      "action-col-def": _vm.actionColDef
+    }
+  }, [_c('el-row', {
+    staticStyle: {
+      "margin-bottom": "10px"
+    },
+    slot: "custom-tool-bar"
+  }, [_c('el-col', {
+    attrs: {
+      "span": 6
+    }
+  }, [_c('el-select', {
+    attrs: {
+      "placeholder": "Filter Selected Level",
+      "multiple": "multiple"
     },
     model: {
-      value: (_vm.selectedPaned.tabs),
+      value: (_vm.customFilters[2].vals),
       callback: function($$v) {
-        _vm.selectedPaned.tabs = $$v
+        _vm.customFilters[2].vals = $$v
       },
-      expression: "selectedPaned.tabs"
+      expression: "customFilters[2].vals"
     }
-  }, [_c('el-tab-pane', {
+  }, _vm._l((_vm.pluckLevel), function(value, index) {
+    return _c('el-option', {
+      key: index,
+      attrs: {
+        "label": _vm.level(value),
+        "value": value
+      }
+    })
+  }))], 1), _vm._v(" "), _c('el-col', {
     attrs: {
-      "name": "time-tracker",
-      "label": "Time Tracker"
+      "span": 6
     }
-  }, [(_vm.selectedPaned.tabs == 'time-tracker') ? _c('time-tracker') : _vm._e()], 1), _vm._v(" "), _c('el-tab-pane', {
+  }, [_c('el-select', {
     attrs: {
-      "name": "event-log",
-      "label": "Event Log"
+      "placeholder": "Filter Selected Course",
+      "multiple": "multiple"
+    },
+    model: {
+      value: (_vm.customFilters[1].vals),
+      callback: function($$v) {
+        _vm.customFilters[1].vals = $$v
+      },
+      expression: "customFilters[1].vals"
     }
-  }, [(_vm.selectedPaned.tabs == 'event-log') ? _c('event-log') : _vm._e()], 1), _vm._v(" "), _c('el-tab-pane', {
-    attrs: {
-      "name": "event-report",
-      "label": "Event Report"
-    }
-  }, [(_vm.selectedPaned.tabs == 'event-report') ? _c('event-report') : _vm._e()], 1)], 1)], 1)
+  }, _vm._l((_vm.pluckCourses), function(value, index) {
+    return _c('el-option', {
+      key: index,
+      attrs: {
+        "label": value,
+        "value": value
+      }
+    })
+  }))], 1)], 1), _vm._v(" "), _vm._l((_vm.titles), function(title) {
+    return _c('el-table-column', {
+      key: title.label,
+      attrs: {
+        "prop": title.prop,
+        "label": title.label,
+        "sortable": "custom"
+      }
+    })
+  })], 2)], 1)], 1)])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-bf35ae00", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-51b76af2", module.exports)
   }
 }
 

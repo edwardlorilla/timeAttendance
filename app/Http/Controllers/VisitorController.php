@@ -177,14 +177,18 @@ class VisitorController extends Controller
 
     public function reportExcel(Request $request)
     {
-        $data = $request->all();
+        $data = $request->data;
+        $year = $request->time;
+        Excel::load(public_path('storage/template.xls'), function ($excel) use ($data, $year) {
 
-        Excel::load(public_path('storage/template.xls'), function ($excel) use ($data) {
-
-            $excel->sheet('Sheet1', function ($sheet) use ($data) {
-                $sheet->fromArray($data, null, 'A8', false, false);
-                $sheet->setCellValue("h5", Carbon::now()->toFormattedDateString());
+            $excel->sheet('countPerCourse', function ($sheet) use ($data) {
+                $sheet->fromArray($data, null, 'A1', false, false);
             });
+            $excel->sheet('timeSpendPerYear', function ($sheet) use ($year) {
+                $sheet->fromArray($year, null, 'A1', false, false);
+            });
+
+
 
         }, 'UTF-8')->store('xls', public_path('storage/'));
         return response()->json(['data' => 'http://' . $request->server('HTTP_HOST') . '/storage/template.xls']);

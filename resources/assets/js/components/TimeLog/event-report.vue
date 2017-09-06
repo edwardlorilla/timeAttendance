@@ -7,7 +7,6 @@
                     type="daterange"
                     placeholder="Pick a range">
         </el-date-picker></span>
-
             <span style="line-height: 36px; padding-left: 1vh">
                 <el-select v-model="measure" placeholder="Select Measure">
                     <el-option
@@ -29,9 +28,9 @@
                   </el-select>
             </span>
 
-                    <button @click="importWordBook" type="submit" class="el-button el-button--primary" style="float: right;">
-                        <span>Import Report</span>
-                    </button>
+                <el-button @click="importWordBook" :loading="loading" type="primary" style="float: right;">
+                    Import Report
+                </el-button>
 
             </div>
             <cross-tabs
@@ -46,11 +45,19 @@
 
             </cross-tabs>
         </el-card>
-        <attendance-chart style="margin-top: 2vh" :dataValue="filteredData"></attendance-chart>
-        <time-stat style="margin-top: 2vh" :dataValue="filteredData"></time-stat>
+        <div id="printArea">
+            <all-courses class="rows" :sumValue="noStudentCourse"></all-courses>
+        </div>
+        <attendance-chart class="rows" :dataValue="filteredData"></attendance-chart>
+        <time-stat class="rows" :sumValue="sumValue" :lineData="lineData" :lineLabel="lineLabel"
+                   :lineValue="lineValue"></time-stat>
     </div>
 </template>
-
+<style>
+    .rows {
+        margin-top: 2vh
+    }
+</style>
 <script>
     import {timeFetch, eventlogs} from './event-log'
     import {workBookReport} from './report/excel'
@@ -60,13 +67,63 @@
                 measure: 'Duration',
                 aggregator: 'count',
                 data: eventlogs,
-                dateFilter: []
+                dateFilter: [],
+                loading: false,
+
+                lineLabel: [],
+                lineData: []
             }
         },
         mounted(){
             timeFetch('/api/times')
         },
         computed: {
+            noStudentCourse(){
+                var vm = this
+                return _(vm.filteredData)
+                        .uniqBy('studentId')
+                        .groupBy('course')
+                        .map(function (items, course) {
+                            return {course: course, count: items.length}
+                        }).value();
+            },
+            sumValue(){
+                var vm = this
+
+                var dataValue = vm.filteredData;
+                return _(dataValue).map('Year').uniq().map(function (key) {
+                    var duration = vm.$moment.duration(_(dataValue).filter({Year: key}).sumBy('Duration'), 'seconds');
+                    var filter = _(dataValue).filter({Year: key});
+                    return {
+                        key: key,
+                        val: filter.sumBy('Duration'),
+                        timeValue: vm.$moment.utc(duration._milliseconds).format('HH:mm:ss'),
+                        no: filter.size()
+                    };
+                }).value();
+            },
+
+            lineValue(){
+                var vm = this
+                var name = vm.filteredData;
+                var uniq = _.uniqBy(name, 'studentId')
+                var countBy = _.countBy(uniq, function (o) {
+                    return vm.$moment(o.LocalDate).format('MMMM');
+                });
+                var data1 = vm.lineLabel;
+                var data2 = vm.lineData;
+                var array = [];
+                for (var key in countBy) {
+                    if (countBy.hasOwnProperty(key)) {
+                        data1.push(key);
+                        data2.push(countBy[key]);
+                        array.push({month: key, count: countBy[key]})
+                    }
+                }
+
+                return array
+
+            },
             fields () {
                 return _.reduce(this.filteredData[0], function (memo, value, key) {
                     if (Number.isNaN(Number.parseFloat(value))) {
@@ -117,12 +174,19 @@
         methods: {
             importWordBook(){
 
-                var data = _(this.filteredData)
-                        .groupBy('course')
-                        .map(function (items, course) {
-                            return {course: course, count: items.length}
-                        }).value();
-                workBookReport(data)
+                var vm = this
+                vm.loading = true
+                var pick = _.map(vm.sumValue, function (data) {
+                    return _.pick(data, 'key', 'timeValue')
+                })
+
+                console.log(pick)
+                axios.post('/api/reportExcel', {
+                    data: vm.noStudentCourse, time: pick
+                }).then(function (response) {
+                    window.open(response.data.data, '_blank');
+                    vm.loading = false
+                })
             }
         }
 
