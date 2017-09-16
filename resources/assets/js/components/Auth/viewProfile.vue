@@ -8,7 +8,7 @@
             :since="addTd.LocaleStartTime | parseInt">
 
     </timeago>
-    <button @click="finishRow(addTd)" class="w3-button w3-block w3-pink">Start</button>
+    <button @click="finishRow(addTd)" class="w3-button w3-block w3-pink">Finish</button>
 </div>
 
 

@@ -16,4 +16,8 @@
 })->where(['all' => '.*']);*/
 Auth::routes();
 
+Route::get('view-profile', function () {
+    return view('profileView');
+});
+
 Route::get('{all}', 'HomeController@index')->where(['all' => '[\/\w\.-]*'])->name('home');

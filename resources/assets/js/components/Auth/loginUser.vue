@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <div id="app" class="container-fluid">
 
 
 
@@ -61,8 +61,8 @@
                 <el-tabs type="border-card">
 
                     <el-tab-pane label="Time">
-                        <p><i  :class="onStart ? 'fa fa-hourglass-start' :  'fa fa-hourglass-end'" class="fa-fw w3-margin-right w3-large w3-text-teal"></i>
-                            <button v-if="!onStart" @click="startTime" class="w3-button w3-block w3-teal">Start</button>
+                        <p><i  :class="!isStart ? 'fa fa-hourglass-start' :  'fa fa-hourglass-end'" class="fa-fw w3-margin-right w3-large w3-text-teal"></i>
+                            <button v-if="isStart" @click="startTime" class="w3-button w3-block w3-teal">Start</button>
                             <view-profile
                                     v-else
                                     :finishRow="finishTime"
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+    import _ from 'lodash'
     import qs from './../TimeLog/qs'
     import {fetch, disableSelected, findStudent} from './../Visitors/state'
     import {timelogs, timeFetch, disableAutoUpdate, addEndTime, addTimeId, findTimeId} from './../TimeLog/state'
@@ -135,6 +136,14 @@
             isEmpty(){
                 var vm = this
                 return !_.isEmpty(vm.formInline.user)
+            },
+            isStart(){
+                var vm = this
+                var onStart = false
+                if(!_.isNull(vm.formInline.user.time.LocaleEndTime)){
+                        onStart = true
+                }
+                return onStart
             }
         },
         watch: {

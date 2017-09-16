@@ -21,6 +21,8 @@ import attendanceChart from  './components/TimeLog/AttendaceChart.vue'
 import allCourses from  './components/TimeLog/allCourses.vue'
 import allCoursesBar from  './components/TimeLog/allCoursesBar'
 import viewProfile from  './components/Auth/viewProfile.vue'
+import loginUser from  './components/Auth/loginUser.vue'
+import example from  './components/Example.vue'
 import Crosstab from 'vue-crosstab'
 import fade from  './components/Transition/fade.vue'
 import pictureUpload from 'vue-picture-input'
@@ -136,5 +138,15 @@ Vue.component('all-courses-bar', function (resolve, reject) {
 Vue.component('report-visitor', function (resolve, reject) {
     setTimeout(function () {
         resolve(reportVisitor)
+    }, 600)
+})
+Vue.component('example', function (resolve, reject) {
+    setTimeout(function () {
+        resolve(example)
+    }, 600)
+})
+Vue.component('login-user', function (resolve, reject) {
+    setTimeout(function () {
+        resolve(loginUser)
     }, 600)
 })

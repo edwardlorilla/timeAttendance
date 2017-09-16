@@ -17,6 +17,8 @@ import components from './components'
 import directive from './directive'
 import VueTimeago from 'vue-timeago'
 import moment from 'moment'
+import viewProfile from  './components/Auth/viewProfile.vue'
+
 Object.defineProperty(Vue.prototype, '$moment', {
     get(){
         return this.$root.moment
