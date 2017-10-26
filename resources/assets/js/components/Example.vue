@@ -1,7 +1,10 @@
 <template>
-    <div id="app" class="container">
-        <login-user></login-user>
-    </div>
+
+        <div id="app" class="container">
+            <fade>
+                <login-user></login-user>
+            </fade>
+        </div>
 </template>
 
 <script>

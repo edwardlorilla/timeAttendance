@@ -48,11 +48,13 @@
                         <!-- Authentication Links -->
 
                         @if (Auth::guest())
+                            <li><a href="/view-profile">View Profile</a></li>
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
                             <router-link tag="li" :to="{ name: 'eventLog' }"><a>Dashboard</a></router-link>
                             <router-link tag="li" :to="{ path: '/timelogs' }"><a>Time Logs</a></router-link>
+                            <router-link tag="li" :to="{ path: '/view-profile' }"><a>View profile</a></router-link>
 
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

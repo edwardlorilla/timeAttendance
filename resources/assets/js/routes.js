@@ -4,7 +4,7 @@
 const Visitor = resolve => require(['./components/Visitors/index.vue'], resolve);
 const indexReportVisitors = resolve => require(['./components/Visitors/report.vue'], resolve);
 const TimeLog = resolve => require(['./components/TimeLog/index.vue'], resolve);
-const ViewProfile = resolve => require(['./components/Auth/viewProfile.vue'], resolve);
+const ViewProfile = resolve => require(['./components/Example.vue'], resolve);
 const LoginUser = resolve => require(['./components/Auth/loginUser.vue'], resolve);
 const eventReport = resolve => require(['./components/TimeLog/indexEventReport.vue'], resolve);
 /*const visitorCreate = resolve => require(['./components/Visitors/create.vue'], resolve);

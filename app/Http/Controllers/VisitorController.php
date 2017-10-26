@@ -28,7 +28,7 @@ class VisitorController extends Controller
     public function index()
     {
         $visitors = Cache::rememberForever('visitor:all', function () {
-            return Visitor::with('category', 'gender', 'course', 'photos', 'photo', 'time')->orderBy('updated_at', 'desc')->get();
+            return Visitor::with('category', 'gender', 'course', 'photos', 'photo', 'times', 'time')->orderBy('updated_at', 'desc')->get();
         });
         return response()->json($visitors);
     }
@@ -179,8 +179,23 @@ class VisitorController extends Controller
     {
         $data = $request->data;
         $year = $request->time;
-        Excel::load(public_path('storage/template.xls'), function ($excel) use ($data, $year) {
+        $transferData = [
+            ['=countPerCourse!A1', '=countPerCourse!B1', '=timeSpendPerYear!A1', '=timeSpendPerYear!B1'],
+            ['=countPerCourse!A2', '=countPerCourse!B2', '=timeSpendPerYear!A2', '=timeSpendPerYear!B2'],
+            ['=countPerCourse!A3', '=countPerCourse!B3', '=timeSpendPerYear!A3', '=timeSpendPerYear!B3'],
+            ['=countPerCourse!A4', '=countPerCourse!B4', '=timeSpendPerYear!A4', '=timeSpendPerYear!B4'],
+            ['=countPerCourse!A5', '=countPerCourse!B5'],
+            ['=countPerCourse!A6', '=countPerCourse!B6']
+        ];
 
+        Excel::load(public_path('storage/template.xls'), function ($excel) use ($data, $year, $transferData) {
+
+
+
+            $excel->sheet('Sheet1', function ($sheet) use ($transferData) {
+                $sheet->setCellValue('H5', Carbon::now());
+                $sheet->fromArray($transferData, null, 'A8', false, false);
+            });
             $excel->sheet('countPerCourse', function ($sheet) use ($data) {
                 $sheet->fromArray($data, null, 'A1', false, false);
             });

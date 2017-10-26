@@ -123,7 +123,7 @@ Vue.component("view-profile", function(resolve){
 Vue.component('fade', function (resolve, reject) {
     setTimeout(function () {
         resolve(fade)
-    }, 600)
+    }, 100)
 })
 Vue.component('all-courses', function (resolve, reject) {
     setTimeout(function () {

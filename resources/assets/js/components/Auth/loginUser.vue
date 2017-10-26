@@ -61,15 +61,15 @@
                 <el-tabs type="border-card">
 
                     <el-tab-pane label="Time">
-                        <p><i  :class="!isStart ? 'fa fa-hourglass-start' :  'fa fa-hourglass-end'" class="fa-fw w3-margin-right w3-large w3-text-teal"></i>
-                            <button v-if="isStart" @click="startTime" class="w3-button w3-block w3-teal">Start</button>
+                        <!--<p><i  :class="!isStart ? 'fa fa-hourglass-start' :  'fa fa-hourglass-end'" class="fa-fw w3-margin-right w3-large w3-text-teal"></i>-->
+                            <!--<button v-if="isStart" @click="startTime" class="w3-button w3-block w3-teal">Start</button>-->
+                            <!--{{atStart ? '': ''}}-->
                             <view-profile
-                                    v-else
-                                    :finishRow="finishTime"
+                                    v-if="atStart"
                                     :loading="loading"
                                     :autoUpdate="autoUpdate"
                                     :currentLang="currentLang"
-                                    :addTd="formInline.user.time"
+                                    :addTd="formInline.user"
                             ></view-profile>
                         </p>
 
@@ -115,7 +115,7 @@
                 onStart: false,
                 loading: false,
                 activeName: null,
-
+                maxTime: 1800,
                 formInline: {
                     studentid: '',
                     user: {}
@@ -137,11 +137,27 @@
                 var vm = this
                 return !_.isEmpty(vm.formInline.user)
             },
+            atStart(){
+                var vm = this
+                var userDetail = vm.formInline.user
+                if (userDetail) {
+                    console.log('atStart', 1)
+                    if (userDetail.id) {
+                        console.log('atStart', 2)
+                        if (!userDetail.disabled) {
+                            vm.startTime()
+                        }
+                    }
+                }
+                return true
+            },
             isStart(){
                 var vm = this
                 var onStart = false
-                if(!_.isNull(vm.formInline.user.time.LocaleEndTime)){
+                if(!_.isNull(vm.formInline.user.time)){
+                    if(!_.isNull(vm.formInline.user.time.LocaleEndTime)){
                         onStart = true
+                    }
                 }
                 return onStart
             }
@@ -176,12 +192,11 @@
                 return level
             },
             startTime(){
-
+                console.log('startTime')
                 var vm = this
                 vm.onStart = true
                 if (vm.formInline) {
                     var userDetail = vm.formInline.user
-
                 }
                 vm.loading = true
                 var addTime = {
@@ -214,10 +229,7 @@
                             disabled: 1
                         })
                                 .then(function (response) {
-                                    console.log(response)
-                                    userDetail.time_id = response.data.data.id
-
-
+                                    userDetail.time_id = response.data.data.id;
                                     addEvent(response.data.data)
                                     addTimeId(response.data.data.id, addTime.visitor_id)
                                     if(userDetail.time_id){
@@ -242,6 +254,7 @@
                 var obj = userId
                 var obj2 = {disabled: 0}
                 var defaultObj = _.defaults(obj, obj2);
+                console.log(defaultObj)
                 setTimeout(function () {
                     axios.patch('/api/times/' + userId.id, defaultObj)
                             .then(function (response) {
@@ -255,19 +268,13 @@
             },
             onSubmit(form) {
                 var vm = this
-
                 var formData = vm.formInline.studentid;
-
                 this.$refs[form].validate(function (valid) {
                     if (valid) {
-
                         vm.formInline.user = findStudent(formData)
-                        /*if (vm.foundUser) {
-
-                        }*/
-
                     }
                 })
+
             }
         }
     }

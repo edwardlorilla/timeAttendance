@@ -39,7 +39,7 @@ function updateEvent(request) {
 }
 import {findId} from './../Visitors/state'
 function addEvent(request) {
-    console.log(request)
+    console.log('addEvent', request)
     var user = findId(request.visitor_id)
     var item = request
     var object = {

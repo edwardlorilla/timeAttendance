@@ -29,7 +29,7 @@
             </span>
 
                 <el-button @click="importWordBook" :loading="loading" type="primary" style="float: right;">
-                    Import Report
+                   Export Report
                 </el-button>
 
             </div>

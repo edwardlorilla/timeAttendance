@@ -1,17 +1,16 @@
 <template>
 <div>
     <timeago
+            v-if="addTd.time"
             :auto-update="autoUpdate"
-            :max-time="86400 * 365"
+            :max-time="maxTime"
             :locale="currentLang"
             class="timeago"
-            :since="addTd.LocaleStartTime | parseInt">
+            :since="addTd.time.LocaleStartTime | parseInt">
 
     </timeago>
-    <button @click="finishRow(addTd)" class="w3-button w3-block w3-pink">Finish</button>
+    <!--<button @click="finishRow(addTd.time)" class="w3-button w3-block w3-pink">Finish</button>-->
 </div>
-
-
 </template>
 
 <script>
@@ -23,6 +22,7 @@
         props: ['addTd','currentLang', 'autoUpdate','loading', 'finishRow'],
         data(){
             return{
+                maxTime: 1800,
             }
         },
 

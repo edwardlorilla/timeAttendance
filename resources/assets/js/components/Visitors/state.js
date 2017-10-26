@@ -31,8 +31,9 @@ function findIndex(id) {
 }
 function findStudent(id) {
 
-    console.log(id)
+
     var user = _.findIndex(data.data, {schoolId: id});
+    console.log('findStudent', data.data[user])
     return data.data[user]
 }
 

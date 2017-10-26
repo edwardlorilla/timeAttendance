@@ -18,8 +18,9 @@
                     <h4 class="list-group-item-text ">
                         <i class='glyphicon glyphicon-time'></i>
                         <timeago
+                                @maxMinute="finishRow(addTd)"
                                 :auto-update="addTd.autoUpdate ?  addTd.autoUpdate  : autoUpdate"
-                                :max-time="86400 * 365"
+                                :max-time="maxTime"
                                 :locale="currentLang"
                                 class="timeago"
                                 :since="addTd.LocaleStartTime | parseInt">
@@ -60,6 +61,7 @@
         data() {
 
             return {
+                maxTime: 1800
             };
         },
         filters: {
@@ -80,7 +82,5 @@
                 return parseInt(str)
             }
         },
-        methods:{
-        }
     }
 </script>

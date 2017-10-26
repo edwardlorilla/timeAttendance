@@ -75,9 +75,7 @@
                 selectedValue: null,
                 addRows: timelogs,
                 foundUser: found,
-                loading: false,
-//                categories: '',
-//                checkList:[]
+                loading: false
             };
         },
         mounted() {

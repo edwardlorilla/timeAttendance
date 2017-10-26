@@ -33,7 +33,8 @@ class Visitor extends Model
     public function photo()
     {
         return $this->belongsTo(Photo::class);
-    }public function time()
+    }
+    public function time()
     {
         return $this->belongsTo(Time::class);
     }
