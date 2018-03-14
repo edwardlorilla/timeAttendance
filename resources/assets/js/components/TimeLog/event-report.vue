@@ -29,7 +29,7 @@
             </span>
 
                 <el-button @click="importWordBook" :loading="loading" type="primary" style="float: right;">
-                   Export Report
+                    Export Report
                 </el-button>
 
             </div>
@@ -59,6 +59,8 @@
     }
 </style>
 <script>
+    import jsPDF from 'jspdf'
+    import jspdfAutotable from 'jspdf-autotable'
     import {timeFetch, eventlogs} from './event-log'
     import {workBookReport} from './report/excel'
     export default {
@@ -84,7 +86,7 @@
                         .uniqBy('studentId')
                         .groupBy('course')
                         .map(function (items, course) {
-                            return {course: course, count: items.length}
+                            return {course: !_.isNull(course) ? course : 'Other ', count: items.length}
                         }).value();
             },
             sumValue(){
@@ -173,20 +175,55 @@
         },
         methods: {
             importWordBook(){
-
                 var vm = this
-                vm.loading = true
-                var pick = _.map(vm.sumValue, function (data) {
-                    return _.pick(data, 'key', 'timeValue')
-                })
+                var pdf = new jsPDF()
+                var ctx = document.getElementById("barChart2").getContext("2d");
+                // details on this usage of this function:
+                // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Using_images#Slicing
 
-                console.log(pick)
-                axios.post('/api/reportExcel', {
-                    data: vm.noStudentCourse, time: pick
-                }).then(function (response) {
-                    window.open(response.data.data, '_blank');
-                    vm.loading = false
-                })
+
+                // document.body.appendChild(canvas);
+                var canvasDataURL = document.getElementById("barChart2").toDataURL("image/png", 1.0);
+
+                //! now we add content to that page!
+
+                const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+
+                const d = new Date();
+                pdf.text("Report " + MONTH_NAMES[d.getMonth()], 10, 10);
+
+                pdf.addImage(canvasDataURL, 'PNG', 20, 20, 110, 110);
+                for (var i = 0; i < vm.sumValue.length; i++) {
+                    pdf.text(`${vm.sumValue[i].key}     ${vm.sumValue[i].timeValue} `, 20 , (i*10) + 150)
+                }
+                pdf.save("Report " + MONTH_NAMES[d.getMonth()] + ".pdf");
+
+
+//
+//                var doc = new jsPDF()
+//                var vm = this
+//                var ctx = document.getElementById("pie-chart").getContext("2d");
+//                ctx.fillStyle = "rgb(200,0,0)";
+//                var image = document.getElementById("pie-chart").toDataURL("image/png");
+//
+//                vm.loading = true
+//                var pick = _.map(vm.sumValue, function (data) {
+//                    return _.pick(data, 'key', 'timeValue')
+//                })
+//                const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+//                    "July", "August", "September", "October", "November", "December"
+//                ];
+//
+//                const d = new Date();
+//                doc.text("Report "+ MONTH_NAMES[d.getMonth()], 10, 10);
+//
+//                doc.addImage(image, 'PNG',15, 40, 100, 100);
+//                doc.save("Report "+ MONTH_NAMES[d.getMonth()]+".pdf");
+//
+//                console.log(pick)
+//
             }
         }
 

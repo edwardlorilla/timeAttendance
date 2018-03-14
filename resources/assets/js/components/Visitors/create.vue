@@ -22,7 +22,7 @@
                         <el-radio class="radio" v-model="formCreated.gender" label="2">Female</el-radio>
                     </el-form-item>
 
-                    <el-form-item v-if="showItem" label="School ID" :label-width="formLabelWidth">
+                    <el-form-item v-if="showItem || formCreated.category.id === 4" label="School ID" :label-width="formLabelWidth">
                         <el-input v-model="formCreated.schoolId" auto-complete="off"></el-input>
                     </el-form-item>
 
@@ -129,6 +129,7 @@
                 return boolean
             },
             showItem: function () {
+                var vm = this
                 return this.formCreated.category.id === 3 || this.formCreated.category.id === 1;
             },
 
@@ -180,15 +181,14 @@
                     gender_id: addData.gender
                 })
                         .then(function (response) {
-
-
                             DATA.data.unshift({
                                 id: response.data.data.id,
                                 schoolId: addData.schoolId,
                                 name: addData.name,
                                 category: {name: addData.category.name, id: addData.category.id},
-                                course: {course: addData.course.course, id: addData.category.id},
-                                year: addData.year,
+                                course: {course: addData.course.course, id: addData.course.id},
+                                course_id: addData.course ? addData.course.id : null,
+                                year:  addData.year,
                                 gender:addData.gender,
                                 photo: {file: response.data ? response.data.photo_file: '' }
                             })

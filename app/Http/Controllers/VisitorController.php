@@ -69,9 +69,9 @@ class VisitorController extends Controller
         $visitor = new Visitor([
             'name' => $request->name,
             'gender_id' => $request->gender_id,
-            'year' => $request->year,
+            'year' => $request->category_id === 3 ? $request->year : null ,
             'category_id' => $request->category_id,
-            'course_id' => $request->course_id,
+            'course_id' => $request->category_id === 3 ? $request->course_id : null,
             'disabled' => 0,
             'schoolId' => $request->schoolId,
             'photo_id' => $photo->id

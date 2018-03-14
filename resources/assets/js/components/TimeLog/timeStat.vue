@@ -8,7 +8,7 @@
             <el-col :span="16">
                 <el-tabs @tab-click="handleClick" v-model="selectedPaned.tabs" type="border-card">
                     <el-tab-pane name="Pie Chart" label="Pie Chart">
-                        <time-pie v-if="selectedPaned.tabs == 'Pie Chart'" :dataSet="sumValue"></time-pie>
+                        <time-pie v-if="selectedPaned.tabs == 'Pie Chart'" ref="pieChart" id="pieChart" :dataSet="sumValue"></time-pie>
                     </el-tab-pane>
                     <el-tab-pane name="Doughnut Chart" label="Doughnut Chart">
                         <time-doughnut v-if="selectedPaned.tabs == 'Doughnut Chart'"

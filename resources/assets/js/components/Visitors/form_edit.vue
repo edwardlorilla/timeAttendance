@@ -16,10 +16,9 @@
         <el-form-item v-if="isShow" label="School ID:" prop="schoolId">
             <el-input v-model="dialog.schoolId"></el-input>
         </el-form-item>
-
         <el-form-item v-if="isShow" label="Course" required>
-            <el-select v-model="dialog.course.id" placeholder="Please select a Course">
-                <el-option v-for="(course, index) in courses" :key="index"
+            <el-select v-model="dialog.course_id" placeholder="Please select a Course">
+                <el-option  v-for="(course, index) in courses" :key="index"
                            :label="course.course" :value='course.id'></el-option>
 
             </el-select>
@@ -27,7 +26,7 @@
 
         <el-form-item label="Category" required>
             <el-select v-model="dialog.category.id" id="Category">
-                <el-option v-for="category in categories" :key="category.id"
+                <el-option  v-for="category in categories" :key="category.id"
                            :label="category.name | ucFirstAllWords" :value='category.id'></el-option>
             </el-select>
 

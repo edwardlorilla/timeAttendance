@@ -5,7 +5,7 @@ import { Bar, mixins  } from 'vue-chartjs'
 
 export default ({
     props: ["dataSet", "type"],
-    template: '<canvas id="canvas" width="400" height="200"></canvas>',
+    template: '<canvas id="barChart2" width="400" height="200"></canvas>',
     computed:{
         labelPluck(){
             return _.map(this.dataSet, function (data) {
@@ -24,6 +24,7 @@ export default ({
                 labels: this.labelPluck,
                 datasets: [
                     {
+
                         data: this.valPluck,
                         backgroundColor: [
                             "rgba(255, 99, 132, 0.6)",

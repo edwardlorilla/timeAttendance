@@ -8,8 +8,10 @@
             <el-tab-pane label="User Edit" name="first">
                 <el-row v-if="activeName === 'first'" :gutter="20">
                     <el-col :span="16">
-                        <form-edit :formLabelWidth="formLabelWidth" :rules="rules" :dialog="dialogFormVisible.editData"
-                                   :isShow="isShow" :courses="courses.all"
+                        <form-edit :formLabelWidth="formLabelWidth" :rules="rules"
+                                   :dialog="dialogFormVisible.editData"
+                                   :isShow="isShow"
+                                   :courses="courses.all"
                                    :categories="categories.categories"></form-edit>
                     </el-col>
                     <el-col :span="8">
@@ -88,14 +90,14 @@
             },
             alertNotification(){
                 var vm = this
-                return vm.notificationDialog ?  vm.$notify.info({
+                return vm.notificationDialog ? vm.$notify.info({
                     title: 'Info',
                     message: '"The school id has already been taken."'
                 }) : false;
             },
             notificationDialog(){
                 var vm = this
-                return  _.includes(vm.exceptStudentId, vm.dialogFormVisible.editData.schoolId)
+                return _.includes(vm.exceptStudentId, vm.dialogFormVisible.editData.schoolId)
             },
             dialogFormVisibles(){
                 return this.dialogFormVisible ? this.dialogFormVisible.editData : ''
@@ -103,7 +105,7 @@
             isShow(){
 
                 var category_id = this.dialogFormVisibles.category.id;
-                var course_id = this.dialogFormVisibles.course.id;
+                var course_id = this.dialogFormVisibles.course_id;
                 var courseAll = this.courses.all
                 var categories = this.categories.categories;
                 var courseFound = _.findIndex(courseAll, {id: course_id});
@@ -121,7 +123,7 @@
                 return (this.dialogFormVisibles.category.id == 3) || (this.dialogFormVisibles.category.id == 1)
             },
             isReady(){
-                return !_.isEmpty(this.dialogFormVisibles.category.id && this.dialogFormVisibles.course.id && this.dialogFormVisibles.name && this.dialogFormVisibles.schoolId && this.dialogFormVisibles.year)
+                return !_.isEmpty(this.dialogFormVisibles.category.id && this.dialogFormVisibles.course_id && this.dialogFormVisibles.name && this.dialogFormVisibles.schoolId && this.dialogFormVisibles.year)
             },
         },
 
@@ -134,7 +136,7 @@
             checkedEdit(){
                 var vm = this
                 return !_.isEmpty(vm.cloneData) ? vm.cloneData.category.id === vm.dialogFormVisibles.category.id &&
-                vm.cloneData.course.id === vm.dialogFormVisibles.course.id &&
+                vm.cloneData.course_id === vm.dialogFormVisibles.course_id&&
                 vm.cloneData.photo.id === vm.dialogFormVisibles.photo.id &&
                 vm.cloneData.name === vm.dialogFormVisibles.name &&
                 vm.cloneData.schoolId === vm.dialogFormVisibles.schoolId &&
@@ -174,8 +176,8 @@
                                 if (edit.category.id != vm.cloneData.category.id) {
                                     edit.category.id = vm.cloneData.category.id
                                 }
-                                if (edit.course.id != vm.cloneData.course.id) {
-                                    edit.course.id = vm.cloneData.course.id
+                                if (edit.course_id != vm.cloneData.course_id) {
+                                    edit.course_id = vm.cloneData.course_id
                                 }
 
                                 if (edit.name != vm.cloneData.name) {

@@ -7,7 +7,6 @@
 require('./bootstrap');
 
 import routes from './routes.js';
-import App from './components/App.vue';
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import DataTables from 'vue-data-tables'

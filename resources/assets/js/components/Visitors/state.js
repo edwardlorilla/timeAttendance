@@ -14,6 +14,7 @@ function fetch(urlFetch) {
             gender: pick.gender ? _.toString(pick.gender.id) : '',
             schoolId: pick.schoolId,
             course: pick.course ? pick.course : '',
+            course_id: pick.course ? pick.course.id : '',
             disabled: pick.disabled != 0 ? true : false,
             photos: _.isEmpty(pick.photos) ? '' : pick.photos,
             photo: _.isEmpty(pick.photo) ? photo_obj  : (pick.photo ? pick.photo : photo_obj ),
@@ -45,7 +46,18 @@ function findId(id) {
 
 
 function dataUpdate(request, message) {
-    console.log(request)
+    if(request.category.id === 3 && request.category.id !== 2){
+        request.course = null
+        request.course_id = null
+        request.year = null
+    }else{
+        request.course = null
+        request.course_id = null
+        request.schoolId = null
+        request.year = null
+
+    }
+
     var editData = request;
     var user = _.findIndex(data.data, {id: request.id});
 
@@ -57,7 +69,7 @@ function dataUpdate(request, message) {
         name: editData.name,
         schoolId: editData.schoolId,
         year: editData.year,
-        course_id: editData.course.id,
+        course_id: editData.course_id,
         disabled: 0,
         gender_id: editData.gender,
         photo_id: editData.photo.id
@@ -127,6 +139,7 @@ function setEditData(row) {
     var vm = isEdit
     var found = _.findIndex(data.data, {id: row})
     _.setWith(data.data[found], 'category_id', data.data[found].category.id);
+    _.setWith(data.data[found], 'course_id', data.data[found].course_id);
     vm.editData = data.data[found]
 }
 
