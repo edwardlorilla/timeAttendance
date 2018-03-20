@@ -51,6 +51,7 @@ class VisitorController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request->all());
         $photo = new Photo();
         if ($file = $request->file('avatar')) {
             $name = time() . $file->getClientOriginalName();
@@ -69,9 +70,9 @@ class VisitorController extends Controller
         $visitor = new Visitor([
             'name' => $request->name,
             'gender_id' => $request->gender_id,
-            'year' => $request->category_id === 3 ? $request->year : null ,
+            'year' => $request->category_id === '3' ? (int)$request->year : null ,
             'category_id' => $request->category_id,
-            'course_id' => $request->category_id === 3 ? $request->course_id : null,
+            'course_id' => $request->category_id === '3' ? (int)$request->course_id : null,
             'disabled' => 0,
             'schoolId' => $request->schoolId,
             'photo_id' => $photo->id

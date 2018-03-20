@@ -5,7 +5,7 @@
 
             <div class="col-md-10 col-md-offset-1">
                 <create-data :pluckSchoolId="pluckSchoolId" v-if="state_view.state_view"></create-data>
-                <edit-data :pluckSchoolId="pluckSchoolId"  v-if="isEdit.isToggle"></edit-data>
+                <edit-data :pluckSchoolId="pluckSchoolId" v-if="isEdit.isToggle"></edit-data>
 
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -14,26 +14,38 @@
                             Visitor Lists
 
                         </span>
-                        <el-button @click="toggleChart = !toggleChart" style="float: right;" type="primary">Toggle Chart</el-button>
+                        <el-button @click="toggleChart = !toggleChart" style="float: right;" type="primary">Toggle
+                            Chart
+                        </el-button>
                     </div>
-                    <time-line v-if="toggleChart"  type="bar" :dataSet="chartCourse"></time-line>
+                    <time-line v-if="toggleChart" type="bar" :dataSet="chartCourse"></time-line>
 
-                    <data-tables  style="margin-top: 2vh" :custom-filters="customFilters" :data="getData" :actions-def="actionsDef"
+                    <data-tables style="margin-top: 2vh"
+                                 :custom-filters="customFilters"
+                                 :data="getData"
+                                 :actions-def="actionsDef"
                                  :checkbox-filter-def="checkFilterDef"
                                  :action-col-def="actionColDef">
                         <el-row slot="custom-tool-bar" style="margin-bottom: 10px">
                             <el-col :span="6">
-                                <el-select placeholder="Filter Selected Level" v-model="customFilters[2].vals" multiple="multiple">
-                                    <el-option v-for="(value, index) in pluckLevel" :key="index" :label="level(value)" :value="value"></el-option>
+                                <el-select placeholder="Filter Selected Level" v-model="customFilters[2].vals"
+                                           multiple="multiple">
+                                    <el-option v-for="(value, index) in pluckLevel" :key="index" :label="level(value)"
+                                               :value="value"></el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="6">
-                                <el-select placeholder="Filter Selected Course" v-model="customFilters[1].vals" multiple="multiple">
-                                    <el-option v-for="(value, index) in pluckCourses" :key="index" :label="value " :value="value"></el-option>
+                                <el-select placeholder="Filter Selected Course" v-model="customFilters[0].vals"
+                                           multiple="multiple">
+                                    <el-option v-for="(value, index) in pluckCourses" :key="index" :label="value "
+                                               :value="value"></el-option>
                                 </el-select>
                             </el-col>
                         </el-row>
-                        <el-table-column v-for="title in titles" :key="title.label" :prop="title.prop" :label="title.label"
+                        <el-table-column v-for="title in titles"
+                                         :key="title.label"
+                                         :prop="title.prop"
+                                         :label="title.label"
                                          sortable="custom">
                         </el-table-column>
                     </data-tables>
@@ -57,17 +69,17 @@
                 isEdit: isEdit,
                 data: data,
                 state_view: state_view,
-                courseFilter:{
+                courseFilter: {
                     data: [],
-                    data2:[]
+                    data2: []
                 },
 
                 customFilters: [{
-                    vals: '',
+                    vals: [],
                     props: 'course',
                 }, {
                     vals: []
-                },{
+                }, {
                     vals: '',
                     props: 'year',
                 }, {
@@ -82,6 +94,9 @@
                 }, {
                     prop: "year",
                     label: "Level"
+                }, {
+                    prop: "schoolId",
+                    label: "School ID"
                 }, {
                     prop: "course",
                     label: "Course"
@@ -152,45 +167,52 @@
 
             pluckCourses(){
                 var courses = this.getData
-                var map = _.map(courses, function(num, key){ return !_.isEmpty(num) ?num.course :null });
+                var map = _.map(courses, function (num, key) {
+                    return !_.isEmpty(num) ? num.course : null
+                });
                 var unique = _.uniq(map);
-                var pluckFilter = _.filter(unique, function(fil){ return fil == "" ? null : fil  });
+                var pluckFilter = _.filter(unique, function (fil) {
+                    return fil == "" ? null : fil
+                });
                 return pluckFilter
             },
             pluckLevel(){
                 var courses = this.getData
-                var map = _.map(courses, function(num, key){ return !_.isEmpty(num) ?num.year :null });
+                var map = _.map(courses, function (num, key) {
+                    return !_.isEmpty(num) ? num.year : null
+                });
                 var unique = _.uniq(map);
-                var pluckFilter = _.filter(unique, function(fil){ return fil == "" ? null : fil  });
+                var pluckFilter = _.filter(unique, function (fil) {
+                    return fil == "" ? null : fil
+                });
                 return pluckFilter
             },
             pluckSchoolId(){
                 var vm = this
-                return  _.map(vm.data.data, 'schoolId')
+                return _.map(vm.data.data, 'schoolId')
 
             },
 
 
             getData(){
-                return _.map(this.data.data, function (num) {
-                    var pick = _.pick(num, 'schoolId ', 'id', 'name', 'category', 'year', 'category_id', 'course', 'photos', 'photo')
-                    var object = {
-                        id: pick.id,
-                        name: pick.name,
-                        year: pick.year,
-                        category: pick.category ? pick.category.name : '',
-                        course: pick.course ? pick.course.course : '',
-                        avatar: !_.isEmpty(pick.photo) ?  '/images/' + pick.photo.file : {file: null, id: null},
-                        schoolId: pick.schoolId
+                var vm = this
+                return _.map(vm.data.data, function (num) {
+                    return {
+                        id: num.id,
+                        name: num.name,
+                        year: num.year,
+                        category: num.category ? num.category.name : '',
+                        course: num.course ? num.course.course : '',
+                        avatar: !_.isEmpty(num.photo) ? '/images/' + num.photo.file : {file: null, id: null},
+                        schoolId: num.schoolId
                     }
-                    return object
                 })
             },
 
             chartCourse(){
                 var vm = this
                 var getData = vm.getData;
-                var countBy =  _.countBy(getData, function (o) {
+                var countBy = _.countBy(getData, function (o) {
                     return o.course
                 });
 
@@ -210,7 +232,7 @@
             pluckYear(){
                 var vm = this
                 var getData = vm.getData;
-                return  _.countBy(getData, function (o) {
+                return _.countBy(getData, function (o) {
                     return o.year
                 });
 
@@ -221,14 +243,14 @@
         methods: {
             level(year){
                 var level
-                if(year == '1'){
+                if (year == '1') {
                     level = year + 'st year'
-                }else if(year == '2'){
-                    level = year +  'nd year'
-                }else if (year == '3'){
-                    level = year +  'rd year'
-                }else{
-                    level = year +  'th year'
+                } else if (year == '2') {
+                    level = year + 'nd year'
+                } else if (year == '3') {
+                    level = year + 'rd year'
+                } else {
+                    level = year + 'th year'
                 }
                 return level
             },
