@@ -106,6 +106,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -245,7 +246,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return {
                     id: num.id,
                     name: num.name,
-                    year: num.year,
+                    year: vm.level(num.year),
                     category: num.category ? num.category.name : '',
                     course: num.course ? num.course.course : '',
                     avatar: !_.isEmpty(num.photo) ? '/images/' + num.photo.file : { file: null, id: null },
@@ -270,7 +271,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     array.push({ key: key, val: countBy[key] });
                 }
             }
-
             return array;
         },
         pluckYear: function pluckYear() {
@@ -290,8 +290,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 level = year + 'nd year';
             } else if (year == '3') {
                 level = year + 'rd year';
-            } else {
+            } else if (year == '4') {
                 level = year + 'th year';
+            } else if (year == '11') {
+                level = 'GRADE ' + year;
+            } else if (year == '12') {
+                level = 'GRADE ' + year;
+            } else if (year == '13') {
+                level = 'FACULTY';
+            } else if (year == '14') {
+                level = 'ADMINISTRATOR';
+            } else if (year == '15') {
+                level = 'BOARD';
             }
             return level;
         },

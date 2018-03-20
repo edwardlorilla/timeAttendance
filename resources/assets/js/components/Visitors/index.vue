@@ -28,7 +28,8 @@
                                  :action-col-def="actionColDef">
                         <el-row slot="custom-tool-bar" style="margin-bottom: 10px">
                             <el-col :span="6">
-                                <el-select placeholder="Filter Selected Level" v-model="customFilters[2].vals"
+                                <el-select placeholder="Filter Selected Level"
+                                           v-model="customFilters[2].vals"
                                            multiple="multiple">
                                     <el-option v-for="(value, index) in pluckLevel" :key="index" :label="level(value)"
                                                :value="value"></el-option>
@@ -200,7 +201,7 @@
                     return {
                         id: num.id,
                         name: num.name,
-                        year: num.year,
+                        year: vm.level(num.year),
                         category: num.category ? num.category.name : '',
                         course: num.course ? num.course.course : '',
                         avatar: !_.isEmpty(num.photo) ? '/images/' + num.photo.file : {file: null, id: null},
@@ -226,7 +227,6 @@
                         array.push({key: key, val: countBy[key]})
                     }
                 }
-
                 return array
             },
             pluckYear(){
@@ -249,8 +249,18 @@
                     level = year + 'nd year'
                 } else if (year == '3') {
                     level = year + 'rd year'
-                } else {
+                } else if( year == '4') {
                     level = year + 'th year'
+                }else if( year == '11') {
+                    level = 'GRADE ' +  year
+                }else if( year == '12') {
+                    level = 'GRADE ' +  year
+                }else if( year == '13') {
+                    level = 'FACULTY'
+                }else if( year == '14') {
+                    level = 'ADMINISTRATOR'
+                }else if( year == '15') {
+                    level = 'BOARD'
                 }
                 return level
             },

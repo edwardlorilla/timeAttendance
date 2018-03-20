@@ -26,11 +26,13 @@
                         <el-input v-model="formCreated.schoolId" auto-complete="off"></el-input>
                     </el-form-item>
 
-                    <el-form-item v-if="showItem" label="Course" :label-width="formLabelWidth">
+                    <el-form-item v-if="formCreated.category.id === 3" label="Course" :label-width="formLabelWidth">
                         <el-select v-model="formCreated.course.id" placeholder="Please select a Course">
-                            <el-option v-for="(course, index) in courses.all" :key="index"
-                                       :label="course.course" :value='course.id'></el-option>
-
+                            <el-option v-for="(course, index) in courses.all"
+                                       v-if="course.id > 0 && course.id < 8"
+                                       :key="index"
+                                       :label="course.course"
+                                       :value='course.id'></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Category" :label-width="formLabelWidth">
@@ -43,10 +45,15 @@
 
                     <el-form-item v-if="showItem" label="Level" :label-width="formLabelWidth">
                         <el-select v-model="formCreated.year" placeholder="Please select a year">
-                            <el-option label="1st year" value="1"></el-option>
-                            <el-option label="2nd year" value="2"></el-option>
-                            <el-option label="3rd year" value="3"></el-option>
-                            <el-option label="4th year" value="4"></el-option>
+                            <el-option v-if="formCreated.category.id === 3" label="1st year" value="1"/>
+                            <el-option v-if="formCreated.category.id === 3" label="2nd year" value="2"/>
+                            <el-option v-if="formCreated.category.id === 3" label="3rd year" value="3"/>
+                            <el-option v-if="formCreated.category.id === 3" label="4th year" value="4"/>
+                            <el-option v-if="formCreated.category.id === 1 " label="GRADE 11" value="11"/>
+                            <el-option v-if="formCreated.category.id === 1" label="GRADE 12" value="12"/>
+                            <el-option v-if="formCreated.category.id === 4" label="Faculty" value="13"/>
+                            <el-option v-if="formCreated.category.id === 4" label="Admin" value="14"/>
+                            <el-option v-if="formCreated.category.id === 4" label="Board" value="15"/>
                         </el-select>
                     </el-form-item>
                 </el-form>
@@ -130,7 +137,7 @@
             },
             showItem: function () {
                 var vm = this
-                return this.formCreated.category.id === 3 || this.formCreated.category.id === 1;
+                return this.formCreated.category.id === 3 || this.formCreated.category.id === 1 || this.formCreated.category.id === 4;
             },
 
             categoryTitle: function () {
@@ -186,9 +193,9 @@
                                 schoolId: addData.schoolId,
                                 name: addData.name,
                                 category: {name: addData.category.name, id: addData.category.id},
-                                course: {course: addData.course.course, id: addData.course.id},
-                                course_id: addData.course ? addData.course.id : null,
-                                year:  addData.year,
+                                course: {course: response.data.data.course.course, id: response.data.data.course_id},
+                                course_id: response.data.data.course_id,
+                                year:  response.data.data.year.toString(),
                                 gender:addData.gender,
                                 photo: {file: response.data ? response.data.photo_file: '' }
                             })

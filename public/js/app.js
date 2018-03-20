@@ -16148,20 +16148,8 @@ function findId(id) {
 }
 
 function dataUpdate(request, message) {
-    if (request.category.id === 3 && request.category.id !== 2) {
-        request.course = null;
-        request.course_id = null;
-        request.year = null;
-    } else {
-        request.course = null;
-        request.course_id = null;
-        request.schoolId = null;
-        request.year = null;
-    }
-
     var editData = request;
     var user = _.findIndex(data.data, { id: request.id });
-
     data.data[user] = request;
     axios.patch('/api/visitors/' + editData.id, {
         id: editData.id,
@@ -92678,7 +92666,7 @@ exports = module.exports = __webpack_require__(15)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -92814,6 +92802,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -92860,7 +92855,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         showItem: function showItem() {
             var vm = this;
-            return this.formCreated.category.id === 3 || this.formCreated.category.id === 1;
+            return this.formCreated.category.id === 3 || this.formCreated.category.id === 1 || this.formCreated.category.id === 4;
         },
 
         categoryTitle: function categoryTitle() {
@@ -92914,9 +92909,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     schoolId: addData.schoolId,
                     name: addData.name,
                     category: { name: addData.category.name, id: addData.category.id },
-                    course: { course: addData.course.course, id: addData.course.id },
-                    course_id: addData.course ? addData.course.id : null,
-                    year: addData.year,
+                    course: { course: response.data.data.course.course, id: response.data.data.course_id },
+                    course_id: response.data.data.course_id,
+                    year: response.data.data.year.toString(),
                     gender: addData.gender,
                     photo: { file: response.data ? response.data.photo_file : '' }
                 });
@@ -93051,7 +93046,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "formCreated.schoolId"
     }
-  })], 1) : _vm._e(), _vm._v(" "), (_vm.showItem) ? _c('el-form-item', {
+  })], 1) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 3) ? _c('el-form-item', {
     attrs: {
       "label": "Course",
       "label-width": _vm.formLabelWidth
@@ -93068,13 +93063,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "formCreated.course.id"
     }
   }, _vm._l((_vm.courses.all), function(course, index) {
-    return _c('el-option', {
+    return (course.id > 0 && course.id < 8) ? _c('el-option', {
       key: index,
       attrs: {
         "label": course.course,
         "value": course.id
       }
-    })
+    }) : _vm._e()
   }))], 1) : _vm._e(), _vm._v(" "), _c('el-form-item', {
     attrs: {
       "label": "Category",
@@ -93115,27 +93110,52 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "formCreated.year"
     }
-  }, [_c('el-option', {
+  }, [(_vm.formCreated.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "1st year",
       "value": "1"
     }
-  }), _vm._v(" "), _c('el-option', {
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "2nd year",
       "value": "2"
     }
-  }), _vm._v(" "), _c('el-option', {
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "3rd year",
       "value": "3"
     }
-  }), _vm._v(" "), _c('el-option', {
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "4th year",
       "value": "4"
     }
-  })], 1)], 1) : _vm._e()], 1)], 1), _vm._v(" "), _c('el-col', {
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 1) ? _c('el-option', {
+    attrs: {
+      "label": "GRADE 11",
+      "value": "11"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 1) ? _c('el-option', {
+    attrs: {
+      "label": "GRADE 12",
+      "value": "12"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 4) ? _c('el-option', {
+    attrs: {
+      "label": "Faculty",
+      "value": "13"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 4) ? _c('el-option', {
+    attrs: {
+      "label": "Admin",
+      "value": "14"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.formCreated.category.id === 4) ? _c('el-option', {
+    attrs: {
+      "label": "Board",
+      "value": "15"
+    }
+  }) : _vm._e()], 1)], 1) : _vm._e()], 1)], 1), _vm._v(" "), _c('el-col', {
     attrs: {
       "span": 8
     }
@@ -93603,7 +93623,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             courseAll[courseFound] ? this.dialogFormVisibles.course.course = courseAll[courseFound].course : '';
             categories[found] ? this.dialogFormVisibles.category.name = categories[found].name : '';
 
-            return this.dialogFormVisibles.category.id == 3 || this.dialogFormVisibles.category.id == 1;
+            return this.dialogFormVisibles.category.id == 3 || this.dialogFormVisibles.category.id == 1 || this.dialogFormVisibles.category.id == 4;
         },
         isReady: function isReady() {
             return !_.isEmpty(this.dialogFormVisibles.category.id && this.dialogFormVisibles.course_id && this.dialogFormVisibles.name && this.dialogFormVisibles.schoolId && this.dialogFormVisibles.year);
@@ -93678,7 +93698,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
             var vm = _this.dialogFormVisible.editData;
             this.cloneData = _.cloneDeep(this.dialogFormVisible.editData);
-            console.log('postData', _this.dialogFormVisible.editData);
             Object(__WEBPACK_IMPORTED_MODULE_0__state__["b" /* dataUpdate */])(vm, _this.$notify({
                 title: 'Success',
                 message: 'Edit Successfully',
@@ -93913,8 +93932,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    computed: {
+        restrictedCategory: function restrictedCategory() {}
+    },
     props: ['formLabelWidth', 'dialog', 'isShow', 'categories', 'courses', 'rules'],
     filters: {
         ucFirstAllWords: function ucFirstAllWords(str) {
@@ -93996,7 +94024,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "dialog.schoolId"
     }
-  })], 1) : _vm._e(), _vm._v(" "), (_vm.isShow) ? _c('el-form-item', {
+  })], 1) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 3) ? _c('el-form-item', {
     attrs: {
       "label": "Course",
       "required": ""
@@ -94013,13 +94041,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "dialog.course_id"
     }
   }, _vm._l((_vm.courses), function(course, index) {
-    return _c('el-option', {
+    return (course.id > 0 && course.id < 8) ? _c('el-option', {
       key: index,
       attrs: {
         "label": course.course,
         "value": course.id
       }
-    })
+    }) : _vm._e()
   }))], 1) : _vm._e(), _vm._v(" "), _c('el-form-item', {
     attrs: {
       "label": "Category",
@@ -94061,27 +94089,52 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "dialog.year"
     }
-  }, [_c('el-option', {
+  }, [(_vm.dialog.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "1st year",
       "value": "1"
     }
-  }), _vm._v(" "), _c('el-option', {
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "2nd year",
       "value": "2"
     }
-  }), _vm._v(" "), _c('el-option', {
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "3rd year",
       "value": "3"
     }
-  }), _vm._v(" "), _c('el-option', {
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 3) ? _c('el-option', {
     attrs: {
       "label": "4th year",
       "value": "4"
     }
-  })], 1)], 1) : _vm._e()], 1)
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 1) ? _c('el-option', {
+    attrs: {
+      "label": "GRADE 11",
+      "value": "11"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 1) ? _c('el-option', {
+    attrs: {
+      "label": "GRADE 12",
+      "value": "12"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 4) ? _c('el-option', {
+    attrs: {
+      "label": "Faculty",
+      "value": "13"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 4) ? _c('el-option', {
+    attrs: {
+      "label": "Admin",
+      "value": "14"
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.dialog.category.id === 4) ? _c('el-option', {
+    attrs: {
+      "label": "Board",
+      "value": "15"
+    }
+  }) : _vm._e()], 1)], 1) : _vm._e()], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

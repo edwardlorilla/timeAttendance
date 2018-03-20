@@ -47,22 +47,8 @@ function findId(id) {
 
 
 function dataUpdate(request, message) {
-    if(request.category.id === 3 && request.category.id !== 2){
-        request.course = null
-        request.course_id = null
-        request.year = null
-    }else{
-        request.course = null
-        request.course_id = null
-        request.schoolId = null
-        request.year = null
-
-    }
-
     var editData = request;
     var user = _.findIndex(data.data, {id: request.id});
-
-
     data.data[user] = request
     axios.patch('/api/visitors/' + editData.id, {
         id: editData.id,

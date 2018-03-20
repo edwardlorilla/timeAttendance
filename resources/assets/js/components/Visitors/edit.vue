@@ -120,7 +120,7 @@
                 categories[found] ? this.dialogFormVisibles.category.name = categories[found].name : '';
 
 
-                return (this.dialogFormVisibles.category.id == 3) || (this.dialogFormVisibles.category.id == 1)
+                return (this.dialogFormVisibles.category.id == 3) || (this.dialogFormVisibles.category.id == 1) || (this.dialogFormVisibles.category.id == 4)
             },
             isReady(){
                 return !_.isEmpty(this.dialogFormVisibles.category.id && this.dialogFormVisibles.course_id && this.dialogFormVisibles.name && this.dialogFormVisibles.schoolId && this.dialogFormVisibles.year)
@@ -204,7 +204,6 @@
                 var _this = this
                 var vm = _this.dialogFormVisible.editData
                 this.cloneData = _.cloneDeep(this.dialogFormVisible.editData)
-                console.log('postData', _this.dialogFormVisible.editData)
                 dataUpdate(vm, _this.$notify({
                     title: 'Success',
                     message: 'Edit Successfully',

@@ -11,10 +11,10 @@ class CategoriesTableSeeder extends Seeder
      * @return void
      */
     private $categories = [
-        ['name' => 'senior high'],
-        ['name' => 'outsider'],
-        ['name' => 'mkd student'],
-        ['name' => 'teacher']
+        ['name' => 'Senior High'],
+        ['name' => 'Outsider'],
+        ['name' => 'MKD Student'],
+        ['name' => 'Teacher']
     ];
     public function run()
     {

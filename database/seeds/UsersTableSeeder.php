@@ -11,7 +11,7 @@ class UsersTableSeeder extends Seeder
      * @return void
      */
     private $users = [
-        ['name' => 'Edward Lance Lorilla', 'email' => 'edwardlorilla1986@gmail.com', 'password' => 'edward'],
+            ['name' => 'Edward Lance Lorilla', 'email' => 'edwardlorilla1986@gmail.com', 'password' => 'edward'],
     ];
     public function run()
 {       DB::table('users')->truncate();

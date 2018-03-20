@@ -16,7 +16,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Cache::rememberForever('courses:all', function () {
-            return Course::orderBy('updated_at', 'desc')->get();
+            return Course::all();
         });
         return response()->json($courses);
     }
