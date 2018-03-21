@@ -117,23 +117,29 @@ class VisitorController extends Controller
      */
     public function update(Request $request, Visitor $visitor)
     {
-//        dd($request->all());
+
+
         $photo = new Photo();
         if ($file = $request->file('avatar')) {
             $name = time() . $file->getClientOriginalName();
             $file->move('images', $name);
             $photo = $photo->create(['file' => $name]);
         }
-        $visitor->update([
-            'name' => $request->name,
-            'gender_id' => $request->gender_id,
-            'year' => $request->category_id === 3 || $request->category_id === 1 || $request->category_id === 4 ? (int)$request->year : null,
-            'course_id' => $request->category_id === 3   ? (int)$request->course_id : ($request->year === "11" ? 8 : ($request->year === "12" ? 9 :  ($request->year === "13" ? 10 :  ($request->year === "14" ? 11 :  ($request->year === '15' ? 12 : null))))),
-            'category_id' => $request->category_id,
-            'disabled' => 0,
-            'schoolId' => $request->schoolId,
-            'photo_id' => $photo->id
-        ]);
+        if (count($request->all()) < 3) {
+            $visitor->update($request->all());
+        }else{
+            $visitor->update([
+                'name' => $request->name,
+                'gender_id' => $request->gender_id,
+                'year' => $request->category_id === 3 || $request->category_id === 1 || $request->category_id === 4 ? (int)$request->year : null,
+                'course_id' => $request->category_id === 3   ? (int)$request->course_id : ($request->year === "11" ? 8 : ($request->year === "12" ? 9 :  ($request->year === "13" ? 10 :  ($request->year === "14" ? 11 :  ($request->year === '15' ? 12 : null))))),
+                'category_id' => $request->category_id,
+                'disabled' => 0,
+                'schoolId' => $request->schoolId,
+                'photo_id' => $photo->id
+            ]);
+        }
+
         if ($photo->id) {
             $visitor->photos()->attach($photo->id);
         }
@@ -144,7 +150,7 @@ class VisitorController extends Controller
 //        $visitor->save();
         Cache::forget('visitor:' . $visitor->id);
         Cache::forget('visitor:all');
-        return response()->json(['data' => $visitor, 'success' => 'Success storing newly created visitor'], 200);
+        return response()->json(['data' => Visitor::where('id', $visitor->id)->with('course', 'category')->first(), 'success' => 'Success storing newly created visitor'], 200);
     }
 
     /**

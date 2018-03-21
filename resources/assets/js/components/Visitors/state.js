@@ -16,7 +16,7 @@ function fetch(urlFetch) {
             course: pick.course ? pick.course : '',
             courseName: pick.course ? pick.course.course : '',
             course_id: pick.course ? pick.course.id : '',
-            disabled: pick.disabled != 0 ? true : false,
+            disabled: pick.disabled != 0,
             photos: _.isEmpty(pick.photos) ? '' : pick.photos,
             photo: _.isEmpty(pick.photo) ? photo_obj  : (pick.photo ? pick.photo : photo_obj ),
             time_id: _.isEmpty(pick.time_id) ? null  : pick.time_id,
@@ -48,9 +48,8 @@ function findId(id) {
 
 function dataUpdate(request, message) {
     var editData = request;
-    var user = _.findIndex(data.data, {id: request.id});
-    data.data[user] = request
-    axios.patch('/api/visitors/' + editData.id, {
+
+    return axios.patch('/api/visitors/' + editData.id, {
         id: editData.id,
         category_id: editData.category.id,
         name: editData.name,
@@ -62,28 +61,18 @@ function dataUpdate(request, message) {
         photo_id: editData.photo.id
     })
 
-        .then(function (response) {
-            console.log(response)
-            if (response) {
-                message
-            }
-        })
-        .catch(function (error) {
-
-        });
-
 
 }
 
 function disableSelected(request, change) {
-    var ID = change == 1 ? request.id : request.visitor_id
-    var found = _.findIndex(data.data, {id: ID});
 
-    console.log(request, change)
+    var found = _.findIndex(data.data, {'id': request.visitor_id});
 
-    data.data[found].disabled = change != 0 ? true : false;
+    console.log(request, change, found, data.data[found])
 
-    axios.patch('/api/visitors/' + ID, {
+    data.data[found].disabled = change != 0;
+
+    axios.put('/api/visitors/' + request.visitor_id, {
         disabled: change,
         time_id: request.time_id
     })

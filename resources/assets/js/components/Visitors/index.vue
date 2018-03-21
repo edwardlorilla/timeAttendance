@@ -5,7 +5,7 @@
 
             <div class="col-md-10 col-md-offset-1">
                 <create-data :pluckSchoolId="pluckSchoolId" v-if="state_view.state_view"></create-data>
-                <edit-data :pluckSchoolId="pluckSchoolId" v-if="isEdit.isToggle"></edit-data>
+                <edit-data :pluckSchoolId="pluckSchoolId" @updateData="updateData($event)" v-if="isEdit.isToggle"></edit-data>
 
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -241,6 +241,11 @@
 
         },
         methods: {
+            updateData(event){
+                var vm = this
+                var user = _.findIndex(vm.data.data, {id: event.id});
+                vm.$set(vm.data.data, user,  event);
+            },
             level(year){
                 var level
                 if (year == '1') {

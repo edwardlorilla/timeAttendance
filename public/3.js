@@ -99,7 +99,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "name": "time-tracker",
       "label": "Time Tracker"
     }
-  }, [(_vm.selectedPaned.tabs == 'time-tracker') ? _c('time-tracker') : _vm._e()], 1), _vm._v(" "), _c('el-tab-pane', {
+  }, [_c('time-tracker', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.selectedPaned.tabs == 'time-tracker'),
+      expression: "selectedPaned.tabs == 'time-tracker'"
+    }]
+  })], 1), _vm._v(" "), _c('el-tab-pane', {
     attrs: {
       "name": "event-log",
       "label": "Event Log"

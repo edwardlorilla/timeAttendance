@@ -9,11 +9,13 @@ function timeFetch(urlFetch) {
 
 
 function addTimeId(userId, visitor){
-    var found = _.findIndex(timelogs.all, {visitor_id: visitor});
-    console.log(found)
+    console.log(userId)
+    var found = _.findIndex(timelogs.all, {id: visitor});
     timelogs.all[found].id = userId
 }
-
+function addTemp(data){
+    timelogs.all.push(data)
+}
 function addEndTime(request){
     var found = _.findIndex(timelogs.all, {id: request.id});
     console.log(request)
@@ -28,4 +30,4 @@ function findTimeId(id){
 export var timelogs = {
     all: []
 }
-export {findTimeId,  timeFetch,addEndTime,addTimeId}
+export {findTimeId,  timeFetch,addEndTime,addTimeId, addTemp}

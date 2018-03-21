@@ -282,6 +282,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        updateData: function updateData(event) {
+            var vm = this;
+            var user = _.findIndex(vm.data.data, { id: event.id });
+            vm.$set(vm.data.data, user, event);
+        },
         level: function level(year) {
             var level;
             if (year == '1') {
@@ -339,6 +344,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }) : _vm._e(), _vm._v(" "), (_vm.isEdit.isToggle) ? _c('edit-data', {
     attrs: {
       "pluckSchoolId": _vm.pluckSchoolId
+    },
+    on: {
+      "updateData": function($event) {
+        _vm.updateData($event)
+      }
     }
   }) : _vm._e(), _vm._v(" "), _c('el-card', {
     staticClass: "box-card"

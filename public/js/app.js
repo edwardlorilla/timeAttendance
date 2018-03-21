@@ -16120,7 +16120,7 @@ function fetch(urlFetch) {
                 course: pick.course ? pick.course : '',
                 courseName: pick.course ? pick.course.course : '',
                 course_id: pick.course ? pick.course.id : '',
-                disabled: pick.disabled != 0 ? true : false,
+                disabled: pick.disabled != 0,
                 photos: _.isEmpty(pick.photos) ? '' : pick.photos,
                 photo: _.isEmpty(pick.photo) ? photo_obj : pick.photo ? pick.photo : photo_obj,
                 time_id: _.isEmpty(pick.time_id) ? null : pick.time_id,
@@ -16149,9 +16149,8 @@ function findId(id) {
 
 function dataUpdate(request, message) {
     var editData = request;
-    var user = _.findIndex(data.data, { id: request.id });
-    data.data[user] = request;
-    axios.patch('/api/visitors/' + editData.id, {
+
+    return axios.patch('/api/visitors/' + editData.id, {
         id: editData.id,
         category_id: editData.category.id,
         name: editData.name,
@@ -16161,23 +16160,18 @@ function dataUpdate(request, message) {
         disabled: 0,
         gender_id: editData.gender,
         photo_id: editData.photo.id
-    }).then(function (response) {
-        console.log(response);
-        if (response) {
-            message;
-        }
-    }).catch(function (error) {});
+    });
 }
 
 function disableSelected(request, change) {
-    var ID = change == 1 ? request.id : request.visitor_id;
-    var found = _.findIndex(data.data, { id: ID });
 
-    console.log(request, change);
+    var found = _.findIndex(data.data, { 'id': request.visitor_id });
 
-    data.data[found].disabled = change != 0 ? true : false;
+    console.log(request, change, found, data.data[found]);
 
-    axios.patch('/api/visitors/' + ID, {
+    data.data[found].disabled = change != 0;
+
+    axios.put('/api/visitors/' + request.visitor_id, {
         disabled: change,
         time_id: request.time_id
     }).then(function (response) {
@@ -36739,11 +36733,12 @@ function qs() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return timelogs; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return findTimeId; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return timeFetch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return timelogs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return findTimeId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return timeFetch; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addEndTime; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return addTimeId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return addTimeId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return addTemp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__event_log__ = __webpack_require__(22);
 /**
  * Created by Lorilla on 13/08/2017.
@@ -36758,11 +36753,13 @@ function timeFetch(urlFetch) {
 }
 
 function addTimeId(userId, visitor) {
-    var found = _.findIndex(timelogs.all, { visitor_id: visitor });
-    console.log(found);
+    console.log(userId);
+    var found = _.findIndex(timelogs.all, { id: visitor });
     timelogs.all[found].id = userId;
 }
-
+function addTemp(data) {
+    timelogs.all.push(data);
+}
 function addEndTime(request) {
     var found = _.findIndex(timelogs.all, { id: request.id });
     console.log(request);
@@ -56015,7 +56012,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
         Object(__WEBPACK_IMPORTED_MODULE_2__Visitors_state__["d" /* fetch */])('/api/visitors');
-        Object(__WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["d" /* timeFetch */])('/api/times');
+        Object(__WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["e" /* timeFetch */])('/api/times');
     },
 
     computed: {
@@ -56101,7 +56098,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             };
             setTimeout(function () {
                 vm.loading = false;
-                __WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["e" /* timelogs */].all.push(addTime);
+                __WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["f" /* timelogs */].all.push(addTime);
             }, 500);
             //                'LocaleDate','visitor_id','LocaleStartTime','LocaleEndTime'
             if (addTime) {
@@ -56116,10 +56113,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }).then(function (response) {
                         userDetail.time_id = response.data.data.id;
                         Object(__WEBPACK_IMPORTED_MODULE_4__TimeLog_event_log__["a" /* addEvent */])(response.data.data);
-                        Object(__WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["b" /* addTimeId */])(response.data.data.id, addTime.visitor_id);
+                        Object(__WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["c" /* addTimeId */])(response.data.data.id, addTime.visitor_id);
                         if (userDetail.time_id) {
                             Object(__WEBPACK_IMPORTED_MODULE_2__Visitors_state__["c" /* disableSelected */])(userDetail, 1);
-                            userDetail.time = Object(__WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["c" /* findTimeId */])(userDetail.time_id);
+                            userDetail.time = Object(__WEBPACK_IMPORTED_MODULE_3__TimeLog_state__["d" /* findTimeId */])(userDetail.time_id);
                         }
                     }).catch(function (error) {
                         console.log(error);
@@ -93698,11 +93695,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
             var vm = _this.dialogFormVisible.editData;
             this.cloneData = _.cloneDeep(this.dialogFormVisible.editData);
-            Object(__WEBPACK_IMPORTED_MODULE_0__state__["b" /* dataUpdate */])(vm, _this.$notify({
-                title: 'Success',
-                message: 'Edit Successfully',
-                type: 'success'
-            }));
+            Object(__WEBPACK_IMPORTED_MODULE_0__state__["b" /* dataUpdate */])(vm).then(function (response) {
+                _this.$notify({
+                    title: 'Success',
+                    message: 'Edit Successfully',
+                    type: 'success'
+                });
+                _this.$emit('updateData', response.data.data);
+            });
         },
         onChanged: function onChanged() {
             console.log("New picture loaded");
@@ -98035,14 +98035,14 @@ var d = new Date();
             currentLang: Object(__WEBPACK_IMPORTED_MODULE_0__qs__["a" /* default */])().lang || 'en-US',
             data: __WEBPACK_IMPORTED_MODULE_1__Visitors_state__["a" /* data */],
             selectedValue: null,
-            addRows: __WEBPACK_IMPORTED_MODULE_3__state__["e" /* timelogs */],
+            addRows: __WEBPACK_IMPORTED_MODULE_3__state__["f" /* timelogs */],
             foundUser: __WEBPACK_IMPORTED_MODULE_1__Visitors_state__["h" /* found */],
             loading: false
         };
     },
     mounted: function mounted() {
         Object(__WEBPACK_IMPORTED_MODULE_1__Visitors_state__["d" /* fetch */])('/api/visitors');
-        Object(__WEBPACK_IMPORTED_MODULE_3__state__["d" /* timeFetch */])('/api/times');
+        Object(__WEBPACK_IMPORTED_MODULE_3__state__["e" /* timeFetch */])('/api/times');
     },
 
     computed: {
@@ -98061,7 +98061,6 @@ var d = new Date();
             var vm = this;
             if (vm.foundUser) {
                 var userDetail = vm.foundUser.user;
-                Object(__WEBPACK_IMPORTED_MODULE_1__Visitors_state__["c" /* disableSelected */])(userDetail, 1);
             }
             vm.loading = true;
             var addTime = {
@@ -98082,7 +98081,7 @@ var d = new Date();
             setTimeout(function () {
                 vm.loading = false;
                 vm.selectedValue = '';
-                __WEBPACK_IMPORTED_MODULE_3__state__["e" /* timelogs */].all.push(addTime);
+                Object(__WEBPACK_IMPORTED_MODULE_3__state__["b" /* addTemp */])(addTime);
             }, 500);
             //                'LocaleDate','visitor_id','LocaleStartTime','LocaleEndTime'
             if (addTime) {
@@ -98095,9 +98094,9 @@ var d = new Date();
                         LocaleEndTime: addTime.LocaleEndTime,
                         disabled: 1
                     }).then(function (response) {
-                        console.log(response);
                         Object(__WEBPACK_IMPORTED_MODULE_2__event_log__["a" /* addEvent */])(response.data.data);
-                        Object(__WEBPACK_IMPORTED_MODULE_3__state__["b" /* addTimeId */])(response.data.data.id, addTime.visitor_id);
+                        Object(__WEBPACK_IMPORTED_MODULE_3__state__["c" /* addTimeId */])(response.data.data.id, addTime.visitor_id);
+                        Object(__WEBPACK_IMPORTED_MODULE_1__Visitors_state__["c" /* disableSelected */])(response.data.data, 1);
                     }).catch(function (error) {
                         console.log(error);
                     });
@@ -98105,15 +98104,15 @@ var d = new Date();
             }
         },
         finishRow: function finishRow(userId) {
+            console.log(userId);
             Object(__WEBPACK_IMPORTED_MODULE_3__state__["a" /* addEndTime */])(userId);
-            Object(__WEBPACK_IMPORTED_MODULE_1__Visitors_state__["c" /* disableSelected */])(userId, 0);
             var obj = userId;
             var obj2 = { disabled: 0 };
             var defaultObj = _.defaults(obj, obj2);
             setTimeout(function () {
                 axios.patch('/api/times/' + userId.id, defaultObj).then(function (response) {
-                    console.log('update', response.data.data);
                     Object(__WEBPACK_IMPORTED_MODULE_2__event_log__["d" /* updateEvent */])(response.data.data);
+                    Object(__WEBPACK_IMPORTED_MODULE_1__Visitors_state__["c" /* disableSelected */])(response.data.data, 0);
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -98166,6 +98165,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v(_vm._s(item.schoolId))])])
   }))], 1), _vm._v(" "), _c('el-form-item', [_c('el-button', {
     attrs: {
+      "disabled": !_vm.selectedValue,
       "loading": _vm.loading,
       "type": "primary",
       "icon": "plus"

@@ -204,11 +204,14 @@
                 var _this = this
                 var vm = _this.dialogFormVisible.editData
                 this.cloneData = _.cloneDeep(this.dialogFormVisible.editData)
-                dataUpdate(vm, _this.$notify({
-                    title: 'Success',
-                    message: 'Edit Successfully',
-                    type: 'success'
-                }))
+                dataUpdate(vm).then(function (response) {
+                    _this.$notify({
+                        title: 'Success',
+                        message: 'Edit Successfully',
+                        type: 'success'
+                    });
+                    _this.$emit('updateData', response.data.data)
+                })
             },
             onChanged() {
                 console.log("New picture loaded");

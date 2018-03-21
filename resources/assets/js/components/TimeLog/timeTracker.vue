@@ -20,7 +20,7 @@
 
             </el-form-item>
             <el-form-item>
-                <el-button :loading="loading" type="primary" @click="addRow" icon="plus">
+                <el-button :disabled="!selectedValue" :loading="loading" type="primary" @click="addRow" icon="plus">
                     Add
                 </el-button>
             </el-form-item>
@@ -58,7 +58,7 @@
     import qs from './qs'
     import {fetch, data, findIndex, found, disableSelected} from './../Visitors/state'
     import {utcDate, updateEvent, addEvent} from './event-log'
-    import {timelogs, timeFetch, disableAutoUpdate, addEndTime, addTimeId} from './state'
+    import {timelogs, timeFetch, disableAutoUpdate, addEndTime, addTimeId, addTemp} from './state'
     var d = new Date();
 
     export default {
@@ -84,6 +84,7 @@
 
         },
         computed: {
+
             foundFetch(){
                 return findIndex(this.selectedValue)
             },
@@ -101,7 +102,7 @@
                 var vm = this
                 if (vm.foundUser) {
                     var userDetail = vm.foundUser.user
-                    disableSelected(userDetail, 1)
+
                 }
                 vm.loading = true
                 var addTime = {
@@ -122,7 +123,7 @@
                 setTimeout(function () {
                     vm.loading = false
                     vm.selectedValue = ''
-                    timelogs.all.push(addTime)
+                    addTemp(addTime)
                 }, 500);
 //                'LocaleDate','visitor_id','LocaleStartTime','LocaleEndTime'
                 if (addTime) {
@@ -136,9 +137,9 @@
                             disabled: 1
                         })
                                 .then(function (response) {
-                                    console.log(response)
                                     addEvent(response.data.data)
                                     addTimeId(response.data.data.id, addTime.visitor_id)
+                                    disableSelected(response.data.data, 1)
                                 })
                                 .catch(function (error) {
                                     console.log(error);
@@ -149,16 +150,16 @@
             ,
             finishRow(userId)
             {
+                console.log(userId)
                 addEndTime(userId)
-                disableSelected(userId, 0)
                 var obj = userId
                 var obj2 = {disabled: 0}
                 var defaultObj = _.defaults(obj, obj2);
                 setTimeout(function () {
                     axios.patch('/api/times/' + userId.id, defaultObj)
                             .then(function (response) {
-                                console.log('update', response.data.data)
                                 updateEvent(response.data.data)
+                                disableSelected(response.data.data, 0)
                             })
                             .catch(function (error) {
                                 console.log(error);
