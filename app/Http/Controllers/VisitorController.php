@@ -126,7 +126,7 @@ class VisitorController extends Controller
             $photo = $photo->create(['file' => $name]);
         }
         if (count($request->all()) < 3) {
-            $visitor->update($request->all());
+            $visitor->update(array_diff_assoc($request->all(), $visitor->toArray()));
         }else{
             $visitor->update([
                 'name' => $request->name,
