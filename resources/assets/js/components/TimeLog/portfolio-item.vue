@@ -65,18 +65,28 @@
             };
         },
         filters: {
-            year_suffix(str){
-                var suffix
-                if (str == 1) {
-                    suffix = 'st'
-                } else if (str == 2) {
-                    suffix = 'nd'
-                } else if (str == 3) {
-                    suffix = 'rd'
-                } else if (str == 4) {
-                    suffix = 'th'
+            year_suffix(year){
+                var level
+                if (year == 1) {
+                    level = year + 'st year'
+                } else if (year == 2) {
+                    level = year + 'nd year'
+                } else if (year == 3) {
+                    level = year + 'rd year'
+                } else if( year == 4) {
+                    level = year + 'th year'
+                }else if( year == 11) {
+                    level = 'GRADE ' +  year
+                }else if( year == 12) {
+                    level = 'GRADE ' +  year
+                }else if( year == 13) {
+                    level = 'FACULTY'
+                }else if( year == 14) {
+                    level = 'ADMINISTRATOR'
+                }else if( year == 15) {
+                    level = 'BOARD'
                 }
-                return `${str}${suffix} year`
+                return level
             },
             parseInt(str){
                 return parseInt(str)

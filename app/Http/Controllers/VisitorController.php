@@ -126,7 +126,8 @@ class VisitorController extends Controller
             $photo = $photo->create(['file' => $name]);
         }
         if (count($request->all()) < 3) {
-            $visitor->update(array_diff_assoc($request->all(), $visitor->toArray()));
+            $visitor->update(array_diff_assoc($request->all(), $visitor->toArray())); //untested
+//            $visitor->update($request->all());
         }else{
             $visitor->update([
                 'name' => $request->name,
@@ -161,7 +162,11 @@ class VisitorController extends Controller
      */
     public function destroy(Visitor $visitor)
     {
-        //
+        $visitor->times()->delete();
+        $visitor->delete();
+        Cache::forget('visitor:' . $visitor->id);
+        Cache::forget('visitor:all');
+        return response()->json(null, 204);
     }
 
     /**

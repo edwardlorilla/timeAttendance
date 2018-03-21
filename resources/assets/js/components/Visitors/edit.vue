@@ -46,8 +46,10 @@
 
          <span slot="footer" class="dialog-footer">
    <button class="btn btn-primary" :disabled="notificationDialog" @click="handleClose()">{{'Edit ' + dialogFormVisible.editData.name}}
-
-   </button> <el-button @click="closeData">Cancel</el-button>
+   </button>
+             <button class="btn btn-danger" :disabled="notificationDialog"
+                     @click="deleteData(dialogFormVisible.editData.id)">{{'Delete ' + dialogFormVisible.editData.name}}</button>
+             <el-button @click="closeData">Cancel</el-button>
   </span>
     </el-dialog>
 </template>
@@ -133,10 +135,18 @@
             this.cloneData = _.cloneDeep(this.dialogFormVisible.editData)
         },
         methods: {
+            deleteData(id){
+                var vm = this
+                axios.delete('/api/visitors/'+ id).then(function () {
+                    console.log(id)
+                    vm.$emit('deleteData', id)
+                    vm.closeData()
+                })
+            },
             checkedEdit(){
                 var vm = this
                 return !_.isEmpty(vm.cloneData) ? vm.cloneData.category.id === vm.dialogFormVisibles.category.id &&
-                vm.cloneData.course_id === vm.dialogFormVisibles.course_id&&
+                vm.cloneData.course_id === vm.dialogFormVisibles.course_id &&
                 vm.cloneData.photo.id === vm.dialogFormVisibles.photo.id &&
                 vm.cloneData.name === vm.dialogFormVisibles.name &&
                 vm.cloneData.schoolId === vm.dialogFormVisibles.schoolId &&

@@ -1,14 +1,14 @@
 webpackJsonp([1],{
 
-/***/ 644:
+/***/ 645:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(648),
-  /* template */
   __webpack_require__(649),
+  /* template */
+  __webpack_require__(650),
   /* styles */
   null,
   /* scopeId */
@@ -41,7 +41,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 648:
+/***/ 649:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -287,6 +287,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var user = _.findIndex(vm.data.data, { id: event.id });
             vm.$set(vm.data.data, user, event);
         },
+        deleteData: function deleteData(event) {
+            var vm = this;
+            var user = _.findIndex(vm.data.data, { id: event });
+            vm.$delete(vm.data.data, user);
+        },
         level: function level(year) {
             var level;
             if (year == '1') {
@@ -327,7 +332,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 649:
+/***/ 650:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -348,6 +353,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "updateData": function($event) {
         _vm.updateData($event)
+      },
+      "deleteData": function($event) {
+        _vm.deleteData($event)
       }
     }
   }) : _vm._e(), _vm._v(" "), _c('el-card', {

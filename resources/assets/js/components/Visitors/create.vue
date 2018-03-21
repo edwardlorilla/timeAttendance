@@ -60,8 +60,9 @@
             </el-col>
             <el-col :span="8">
 
-                <picture-input
 
+                <picture-input
+                        v-if="pictureToggle"
                         ref="pictureInput"
                         @change="onChanged"
                         @remove="onRemoved"
@@ -76,8 +77,8 @@
   drag: 'Drag and drop your image here'}">
 
                 </picture-input>
-
-
+                <vue-webcam v-else ref='pictureInput'></vue-webcam>
+                <el-button  @click="onChanged">Capture</el-button>
             </el-col>
         </el-row>
 
@@ -94,6 +95,7 @@
 </style>
 
 <script>
+    import VueWebcam from 'vue-webcam';
     import {FormDataPost} from './../form_api/form'
     import {change_view, state_view, fetchCategories, category} from './state_view'
     import {data as DATA}from './state'
@@ -102,6 +104,7 @@
         props:['pluckSchoolId'],
         data(){
             return {
+                pictureToggle: false,
                 loading: false,
                 image: '',
                 courses: courses,
@@ -220,7 +223,7 @@
                 if (this.$refs.pictureInput.file) {
                     this.image = this.$refs.pictureInput.file;
                 } else {
-                    console.log("Old browser. No support for Filereader API");
+                    this.image = this.$refs.pictureInput.getPhoto();
                 }
             },
             onRemoved() {
