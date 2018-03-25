@@ -193,8 +193,6 @@
                 return _.map(vm.data.data, 'schoolId')
 
             },
-
-
             getData(){
                 var vm = this
                 return _.map(vm.data.data, function (num) {
@@ -233,7 +231,9 @@
                 var vm = this
                 var getData = vm.getData;
                 return _.countBy(getData, function (o) {
-                    return o.year
+                    if(!_.isUndefined(o.year)){
+                        return o.year
+                    }
                 });
 
 
@@ -270,6 +270,8 @@
                     level = 'ADMINISTRATOR'
                 }else if( year == '15') {
                     level = 'BOARD'
+                }else if(_.isNull(year)){
+                    level = 'Other'
                 }
                 return level
             },

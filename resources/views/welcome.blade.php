@@ -15,7 +15,11 @@
 <body>
 <div id="app">
 </div>
+
 </body>
+<style>
+
+</style>
 <script type="text/javascript" src="{{mix('/js/app.js')}}"></script>
 
 </html>

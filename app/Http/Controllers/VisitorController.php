@@ -51,10 +51,22 @@ class VisitorController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
         $photo = new Photo();
-        if ($file = $request->file('avatar')) {
-            $name = time() . $file->getClientOriginalName();
+        $file = $request->avatar;
+        if ($file && $file !== "null" && gettype($request->avatar) !== "object") {
+            list($type, $imageData) = explode(';', $request->avatar);
+            list(, $extension) = explode('/', $type);
+            list(, $imageData) = explode(',', $imageData);
+            $fileName = uniqid() . '.' . $extension;
+            $source = fopen($request->avatar, 'r');
+            $destination = fopen('images/' . $fileName, 'w');
+            stream_copy_to_stream($source, $destination);
+            fclose($source);
+            fclose($destination);
+            $photo = $photo->create(['file' => $fileName]);
+        }
+        if($file && $file !== "null" && gettype($request->avatar) === "object"){
+            $name =  uniqid() . $file->getClientOriginalName();
             $file->move('images', $name);
             $photo = $photo->create(['file' => $name]);
         }

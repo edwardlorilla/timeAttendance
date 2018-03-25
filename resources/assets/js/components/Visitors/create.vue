@@ -59,8 +59,6 @@
                 </el-form>
             </el-col>
             <el-col :span="8">
-
-
                 <picture-input
                         v-if="pictureToggle"
                         ref="pictureInput"
@@ -78,7 +76,8 @@
 
                 </picture-input>
                 <vue-webcam v-else ref='pictureInput'></vue-webcam>
-                <el-button  @click="onChanged">Capture</el-button>
+                <el-button v-if="!pictureToggle" @click="onChanged">Capture</el-button>
+                <el-button @click="pictureToggle = !pictureToggle"><i  class="el-icon-sort"></i>{{!pictureToggle ? ' Picture Upload' : ' Camera Upload'}}</el-button>
             </el-col>
         </el-row>
 
@@ -95,13 +94,14 @@
 </style>
 
 <script>
-    import VueWebcam from 'vue-webcam';
+    import VueWebcam from './VueWebcam.vue';
     import {FormDataPost} from './../form_api/form'
     import {change_view, state_view, fetchCategories, category} from './state_view'
     import {data as DATA}from './state'
     import {fetchCourses, courses} from './../Course/courses'
     export default {
         props:['pluckSchoolId'],
+        components: { 'vue-webcam':VueWebcam },
         data(){
             return {
                 pictureToggle: false,
@@ -179,8 +179,11 @@
             postData(){
                 var vm = this;
 
-                var addData = this.formCreated;
+                var addData = vm.formCreated;
                 vm.loading = true
+
+                //if capture are not press the post will capture it for you, if image are null and capture on
+                !vm.image && !vm.pictureToggle ? vm.onChanged() : null
                 FormDataPost('/api/visitors', {
                     name: addData.name,
                     course_id: addData.course.id,
@@ -219,11 +222,11 @@
                         });
             },
             onChanged() {
-                console.log("New picture loaded");
-                if (this.$refs.pictureInput.file) {
-                    this.image = this.$refs.pictureInput.file;
+                var vm = this
+                if (vm.$refs.pictureInput.file) {
+                    vm.image = vm.$refs.pictureInput.file;
                 } else {
-                    this.image = this.$refs.pictureInput.getPhoto();
+                    vm.image = vm.$refs.pictureInput.getPhoto();
                 }
             },
             onRemoved() {

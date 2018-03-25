@@ -106,10 +106,60 @@
     <transition name="fade" mode="out-in" appear>
         @yield('content')
     </transition>
+    <div id="footer">
+        <div class="container">
+            <p class="muted credit"><a href="https://github.com/edwardlorilla/timeAttendance">Copyright © 2018 MKD</a>.</p>
+        </div>
+    </div>
 </div>
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/bundle.js') }}"></script>
+<style type="text/css">
+    /* Sticky footer styles
+      -------------------------------------------------- */
+
+    html,
+    body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+    }
+
+    /* Wrapper for page content to push down footer */
+    #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+    }
+
+    /* Set the fixed height of the footer here */
+    #push,
+    #footer {
+        height: 60px;
+    }
+    #footer {
+        background-color: #f5f5f5;
+    }
+
+    /* Lastly, apply responsive CSS fixes as necessary */
+    @media (max-width: 767px) {
+        #footer {
+            margin-left: -20px;
+            margin-right: -20px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    }
+    .container {
+        width: auto;
+        max-width: 680px;
+    }
+    .container .credit {
+        margin: 20px 0;
+    }
+</style>
 </body>
 </html>

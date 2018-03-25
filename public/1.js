@@ -1,14 +1,14 @@
 webpackJsonp([1],{
 
-/***/ 645:
+/***/ 646:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(649),
-  /* template */
   __webpack_require__(650),
+  /* template */
+  __webpack_require__(651),
   /* styles */
   null,
   /* scopeId */
@@ -41,7 +41,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 649:
+/***/ 650:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -277,7 +277,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var vm = this;
             var getData = vm.getData;
             return _.countBy(getData, function (o) {
-                return o.year;
+                if (!_.isUndefined(o.year)) {
+                    return o.year;
+                }
             });
         }
     },
@@ -293,6 +295,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             vm.$delete(vm.data.data, user);
         },
         level: function level(year) {
+            console.log(year);
             var level;
             if (year == '1') {
                 level = year + 'st year';
@@ -312,6 +315,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 level = 'ADMINISTRATOR';
             } else if (year == '15') {
                 level = 'BOARD';
+            } else if (_.isNull(year)) {
+                level = 'Other';
             }
             return level;
         },
@@ -332,7 +337,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 650:
+/***/ 651:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
